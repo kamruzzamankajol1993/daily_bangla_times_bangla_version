@@ -11,7 +11,7 @@ use App\Models\SocialLink; // Import SocialLink Model
 use App\Models\Category;   // Import Category Model
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
-
+use App\Models\Post;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -35,17 +35,39 @@ class AppServiceProvider extends ServiceProvider
             'service' => 'App\Models\Service',
         ]);
         ///new code start
-
+view()->composer('front.include.headline', function ($view) {
+    
+    $breakingNews = Post::where('status', 'approved')    // স্ট্যাটাস 'approved' হতে হবে
+                        ->where('breaking_news', 1)      // ব্রেকিং নিউজ হতে হবে
+                        ->where('trash_status', 0)       // ট্রাশ স্ট্যাটাস ০ হতে হবে
+                        ->where('draft_status', 0)       // ড্রাফট স্ট্যাটাস ০ হতে হবে (ড্রাফট নয়) <-- নতুন যুক্ত করা হয়েছে
+                        ->orderBy('id', 'desc')
+                        ->where('language', 'bn')
+                        ->take(20)
+                        ->get();
+    
+    $view->with('breakingNews', $breakingNews);
+});
         view()->composer('*', function ($view)
         {
-            // --- 1. Dynamic Header Categories (New Logic) ---
-            // Fetch parent categories (where parent_id is null)
-            // Eager load 'brands' to check if a category has companies or not
-            $header_categories = Category::whereNull('parent_id')
-                                         ->where('status', 1) // Assuming you want only active categories
-                          
-                                         ->get();
-            view()->share('header_categories', $header_categories);
+            // --- 1. Dynamic Header Categories (Modified Logic) ---
+    
+    // সব অ্যাক্টিভ প্যারেন্ট ক্যাটাগরি order_id অনুসারে নিয়ে আসা হচ্ছে
+    $allCategories = Category::with('children') // <--- এই অংশটি নতুন যোগ করা হয়েছে
+                        ->whereNull('parent_id')
+                        ->where('status', 1)
+                        ->orderBy('order_id', 'asc')
+                        ->get();
+
+    // প্রথম ১৬টি ক্যাটাগরি মেইন মেনুর জন্য
+    $header_categories = $allCategories->take(15);
+
+    // পরবর্তী ১০টি ক্যাটাগরি 'বিবিধ' ড্রপডাউনের জন্য (১৬টি বাদ দিয়ে পরের ১০টি)
+    $more_categories = $allCategories->skip(15)->take(10);
+
+    // ভিউতে দুইটি ভেরিয়েবলই পাঠানো হলো
+    view()->share('header_categories', $header_categories);
+    view()->share('more_categories', $more_categories);
 
 
             // --- 2. Social Links (New Logic) ---
@@ -74,6 +96,24 @@ class AppServiceProvider extends ServiceProvider
                 $front_ins_d = $frontEndData->description;
                 $front_develop_by = $frontEndData->develop_by;
 
+
+                $front_admin_url= $frontEndData->main_url;
+                $front_front_url= $frontEndData->front_url;
+                $front_english_url= $frontEndData->english_url;
+                $front_personal_logo = $frontEndData->personal_logo;
+                $front_english_banner = $frontEndData->english_banner;
+                $front_bangla_banner = $frontEndData->bangla_banner;
+                $front_english_header_logo = $frontEndData->english_header_logo;
+                $front_bangla_footer_logo = $frontEndData->bangla_footer_logo;
+                $front_english_footer_logo = $frontEndData->english_footer_logo;
+                $front_watermark = $frontEndData->watermark;
+                $front_madam_image = $frontEndData->madam_image;
+
+                $front_long_description = $frontEndData->long_description;
+                $front_us_office_address = $frontEndData->us_office_address;
+
+                $front_email_one = $frontEndData->email_one;
+
             } else {
                 // Default values if no data is found
                 $front_icon_name = '';
@@ -91,6 +131,21 @@ class AppServiceProvider extends ServiceProvider
                 $front_ins_k = '';
                 $front_ins_d = '';
                 $front_develop_by = '';
+                $front_admin_url= '';
+                $front_front_url= '';
+                $front_english_url= '';
+                $front_personal_logo = '';
+                $front_english_banner = ''; 
+                $front_bangla_banner = '';
+                $front_english_header_logo = '';
+                $front_bangla_footer_logo = '';
+                $front_english_footer_logo = '';
+                $front_watermark = '';
+                $front_madam_image = '';
+                $front_long_description = '';
+                $front_us_office_address = '';
+                $front_email_one = '';
+
             }
 
             view()->share('front_icon_name', $front_icon_name);
@@ -110,6 +165,21 @@ class AppServiceProvider extends ServiceProvider
             view()->share('front_ins_k', $front_ins_k);
             view()->share('front_ins_d', $front_ins_d);
             view()->share('front_develop_by', $front_develop_by);
+
+            view()->share('front_admin_url', $front_admin_url);
+            view()->share('front_front_url', $front_front_url);
+            view()->share('front_english_url', $front_english_url);
+            view()->share('front_personal_logo', $front_personal_logo);             
+            view()->share('front_english_banner', $front_english_banner);
+            view()->share('front_bangla_banner', $front_bangla_banner);
+            view()->share('front_english_header_logo', $front_english_header_logo);
+            view()->share('front_bangla_footer_logo', $front_bangla_footer_logo);
+            view()->share('front_english_footer_logo', $front_english_footer_logo);
+            view()->share('front_watermark', $front_watermark);
+            view()->share('front_madam_image', $front_madam_image);
+            view()->share('front_long_description', $front_long_description);
+            view()->share('front_us_office_address', $front_us_office_address);
+            view()->share('front_email_one', $front_email_one);
 
             //provider code for frontend end
 

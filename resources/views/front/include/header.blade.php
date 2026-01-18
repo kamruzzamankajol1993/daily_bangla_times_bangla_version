@@ -8,7 +8,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 
-                <img src="https://placehold.co/200x50/red/white?text=Bangla+Times" alt="Logo" class="img-fluid">
+                <img src="{{ $front_admin_url }}{{ $front_logo_name }}" alt="Logo" class="img-fluid" style="max-height: 50px; width: auto;">
                 
                 <button class="btn fs-3 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearchBox" aria-expanded="false" aria-controls="mobileSearchBox">
                     <i class="fas fa-search"></i>
@@ -25,7 +25,7 @@
             </div>
 
             <a href="#" class="d-none d-lg-block mb-2">
-                <img src="https://placehold.co/350x80/white/red?text=Daily+Bangla+Times" alt="Logo" class="img-fluid">
+                <img src="{{ $front_admin_url }}{{ $front_logo_name }}" alt="Logo" class="img-fluid">
             </a>
             
             <div class="ad-slot my-2 d-none d-lg-block">

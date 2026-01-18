@@ -21,8 +21,6 @@ class Product extends Model
         'slug',
         'product_code',
         'brand_id',
-        'main_brand_id',
-        'specification',
         'category_id',
         'subcategory_id',
         'sub_subcategory_id',
@@ -64,12 +62,6 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
-    }
-
-
-    public function mainbrand()
-    {
-        return $this->belongsTo(MainBrand::class);
     }
 
     /**

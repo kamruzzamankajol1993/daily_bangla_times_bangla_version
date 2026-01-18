@@ -55,7 +55,8 @@ Route::get('/clear', function() {
     return redirect()->back();
 });
 
-
+// Video News Detail Route
+Route::get('/video-gallery/{slug}', [App\Http\Controllers\Front\FrontController::class, 'videoDetail'])->name('front.video.details');
 //frontend part start 
 Route::post('/contact-us-post', [App\Http\Controllers\Front\FrontController::class, 'contactUsPost'])->name('front.contactUsPost');
 Route::controller(FrontController::class)->group(function () {

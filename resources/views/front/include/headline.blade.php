@@ -1,25 +1,39 @@
 <div class="container mb-1 d-none d-md-block">
-        <div class="ticker-wrapper bg-success text-white d-flex align-items-center rounded-top">
-            <div class="ticker-title bg-danger px-3 py-2 fw-bold text-nowrap">সর্বশেষ:</div>
-            <div class="ticker-content flex-grow-1 py-2 overflow-hidden">
-                <marquee scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">
+    {{-- ডিভের হাইট বাড়ানো হয়েছে (py-3) --}}
+    <div class="ticker-wrapper bg-success text-white d-flex align-items-center rounded-top" style="height: 60px;"> 
+        
+        <div class="ticker-title bg-danger px-3 h-100 d-flex align-items-center fw-bold text-nowrap">সর্বশেষ:</div>
+        
+        <div class="ticker-content flex-grow-1 h-100 d-flex align-items-center overflow-hidden">
+            <marquee scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">
+                
+                @if(isset($breakingNews) && count($breakingNews) > 0)
+                    @foreach($breakingNews as $news)
+                        <a href="{{ route('front.product.details', $news->slug) }}" class="ticker-item me-5 d-inline-flex align-items-center text-white text-decoration-none">
+                            
+                            {{-- ইমেজ লজিক: ইমেজ থাকলে দেখাবে, না থাকলে প্লেসহোল্ডার --}}
+                            @php
+                                $image = $news->image ? $front_admin_url . $news->image : 'https://placehold.co/70x45/333/fff?text=News';
+                            @endphp
+
+                            {{-- ইমেজ সাইজ বড় এবং আয়তাকার করা হয়েছে (70px x 45px), rounded-circle বাদ দেওয়া হয়েছে --}}
+                            <img src="{{ $image }}" 
+                                 class="rounded-1 border border-white me-2" 
+                                 style="width: 70px; height: 45px; object-fit: cover;" 
+                                 alt="News Image">
+                            
+                            {{-- টাইটেল --}}
+                            <span style="font-size: 16px;">{{ $news->title }}</span>
+                        </a>
+                    @endforeach
+                @else
+                    {{-- যদি কোনো ব্রেকিং নিউজ না থাকে --}}
                     <span class="ticker-item me-5 d-inline-flex align-items-center">
-                        <img src="https://placehold.co/40x40/333/fff?text=IMG" class="rounded-circle border border-white me-2" width="30" height="30">
-                        দেশের ঐতিহ্য তুলে ধরার জন্য জামদানি বেছে নিলেন মিথিলা
+                        ব্রেকিং নিউজ আপডেট হচ্ছে... সাথে থাকুন।
                     </span>
-                    <span class="ticker-item me-5 d-inline-flex align-items-center">
-                        <img src="https://placehold.co/40x40/555/fff?text=IMG" class="rounded-circle border border-white me-2" width="30" height="30">
-                        ১৩ লাখ রোহিঙ্গার বোঝা আর বহন করা সম্ভব নয়: জাতিসংঘে বাংলাদেশ
-                    </span>
-                    <span class="ticker-item me-5 d-inline-flex align-items-center">
-                        <img src="https://placehold.co/40x40/777/fff?text=IMG" class="rounded-circle border border-white me-2" width="30" height="30">
-                        শীতের প্রকোপ বেড়েছে উত্তরাঞ্চলে, জনজীবন বিপর্যস্ত
-                    </span>
-                    <span class="ticker-item me-5 d-inline-flex align-items-center">
-                        <img src="https://placehold.co/40x40/999/fff?text=IMG" class="rounded-circle border border-white me-2" width="30" height="30">
-                        দ্রব্যমূল্য নিয়ন্ত্রণে সরকারের নতুন পদক্ষেপ
-                    </span>
-                </marquee>
-            </div>
+                @endif
+
+            </marquee>
         </div>
     </div>
+</div>

@@ -11,20 +11,13 @@ class Brand extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_id', // নতুন কলাম
         'name',
         'slug',
         'logo',
-        'description',
         'status',
     ];
 
-    // ক্যাটাগরি রিলেশন
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
-
+    // Automatically create a slug from the name if no slug is provided
     protected static function boot()
     {
         parent::boot();
@@ -35,10 +28,4 @@ class Brand extends Model
             }
         });
     }
-
-    public function companyCategories()
-{
-    // CompanyCategory মডেলে 'company_id' ফরেন কি হিসেবে আছে
-    return $this->hasMany(CompanyCategory::class, 'company_id');
-}
 }

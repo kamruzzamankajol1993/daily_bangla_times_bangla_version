@@ -11,20 +11,21 @@
     <meta name="robots" content="index, follow">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.dailybanglatimes.com/">
-    <meta property="og:title" content="Daily Bangla Times | সর্বদা সত্যের সন্ধানে">
-    <meta property="og:description" content="বাংলাদেশের সর্বশেষ এবং ব্রেকিং নিউজ পড়ুন ডেইলি বাংলা টাইমসে।">
-    <meta property="og:image" content="https://placehold.co/1200x630/red/white?text=Daily+Bangla+Times">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $front_ins_name }}">
+    <meta property="og:description" content="{{ $front_ins_d }}">
+    <meta property="og:image" content="{{ $front_admin_url }}{{ $front_logo_name }}">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Daily Bangla Times | সর্বদা সত্যের সন্ধানে">
-    <meta name="twitter:description" content="বাংলাদেশের সর্বশেষ এবং ব্রেকিং নিউজ পড়ুন ডেইলি বাংলা টাইমসে।">
-    <meta name="twitter:image" content="https://placehold.co/1200x630/red/white?text=Daily+Bangla+Times">
+    <meta name="twitter:title" content="{{ $front_ins_name }}">
+    <meta name="twitter:description" content="{{ $front_ins_d }}">
+    <meta name="twitter:image" content="{{ $front_admin_url }}{{ $front_logo_name }}">
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/') }}public/front/css/style.css">
+    <link rel="shortcut icon" href="{{ $front_admin_url }}{{ $front_icon_name }}">
       @yield('css')
 </head>
 <body class="bg-light">

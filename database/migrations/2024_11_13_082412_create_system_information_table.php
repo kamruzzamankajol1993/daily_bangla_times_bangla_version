@@ -32,8 +32,6 @@ return new class extends Migration
             $table->string('develop_by')->nullable();
             $table->string('charge')->nullable();
             $table->string('usdollar')->nullable();
-            $table->string('open_hour')->nullable();
-            $table->string('title')->nullable();
             $table->timestamps();
         });
     }

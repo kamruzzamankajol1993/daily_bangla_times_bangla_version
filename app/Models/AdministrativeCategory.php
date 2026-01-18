@@ -6,23 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Category extends Model
+class AdministrativeCategory extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'parent_id',
         'name',
-        'eng_name',
         'slug',
         'image',
         'status',
-        'order_id',
     ];
 
     protected $guarded = ['id'];
 
-    // Automatically create a slug from the name
     protected static function boot()
     {
         parent::boot();
@@ -40,21 +37,13 @@ class Category extends Model
         });
     }
 
-     public function parent()
+    public function parent()
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+        return $this->belongsTo(AdministrativeCategory::class, 'parent_id');
     }
 
-    /**
-     * Get the child categories.
-     */
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id', 'id');
-    }
-
-    public function posts()
-    {
-        return $this->belongsToMany(Post::class, 'post_category', 'category_id', 'post_id');
+        return $this->hasMany(AdministrativeCategory::class, 'parent_id');
     }
 }
