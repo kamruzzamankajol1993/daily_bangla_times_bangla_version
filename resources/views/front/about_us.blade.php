@@ -1,309 +1,181 @@
-@include('front.master.master')
-@section('title', 'About Us')
-@section('css')
+@extends('front.master.master')
+
+@section('title')
+{{ $front_ins_name }} 
 @endsection
+
+@section('css')
+ <style>
+        /* Page Specific Styles */
+        .about-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://placehold.co/1920x600/333/fff?text=Newsroom');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            color: white;
+        }
+        .mission-card {
+            transition: transform 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .mission-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 3px solid #dc3545;
+        }
+        .team-img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .team-social {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            background: rgba(220, 53, 69, 0.9);
+            padding: 10px;
+            text-align: center;
+            transition: bottom 0.3s ease;
+        }
+        .team-card:hover .team-social {
+            bottom: 0;
+        }
+        .team-social a { color: white; margin: 0 5px; }
+    </style>
+@endsection
+
 @section('body')
+  <section class="about-hero text-center mb-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">সত্যের সন্ধানে নির্ভীক</h1>
+            <p class="lead mx-auto" style="max-width: 700px;">
+                ডেইলি বাংলা টাইমস—একটি নাম, একটি বিশ্বাস। আমরা সংবাদের গভীরে গিয়ে সত্য উদঘাটনে প্রতিশ্রুতিবদ্ধ।
+            </p>
+        </div>
+    </section>
 
-     <main>
-
-        <section class="history section">
-
-            <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-
-                <div class="row g-5">
-                    <div class="col-lg-7">
-                        <div class="about-content aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-                            <h2>Our Story</h2>
-                            <p>Founded under the umbrella of Aurexa Group Pty Ltd, Australia, Cellexa Scientific
-                                Solutions was born from a vision to bridge global innovation with local pharmaceutical
-                                needs. Today, we serve clients across continents, empowering research, development, and
-                                quality control in the pharmaceutical sector.</p>
-
-                            <div class="row">
-                                <div class="col-lg-12 mb-3 text-center aos-init aos-animate" data-aos="fade-up"
-                                    data-aos-delay="500">
-                                    <div class="achievement-badge">
-                                        <div class="badge-content">
-                                            <h4 class="badge-title">Our Mission</h4>
-                                            <p class="badge-text">To deliver high-quality pharmaceutical lab equipment
-                                                that drives innovation,
-                                                ensures compliance, and supports scientific excellence worldwide</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 text-center aos-init aos-animate" data-aos="fade-up"
-                                    data-aos-delay="500">
-                                    <div class="achievement-badge">
-                                        <div class="badge-content">
-                                            <h4 class="badge-title">Our Vision</h4>
-                                            <p class="badge-text">To be a globally trusted partner in pharmaceutical
-                                                solutions—advancing science
-                                                and improving lives through reliable technology and strategic
-                                                collaboration.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-5">
-                        <div class="about-image aos-init aos-animate" data-aos="zoom-in" data-aos-delay="300">
-                            <img src="assets/img/home/page_about.webp" alt="Campus">
-                        </div>
+    <div class="container mb-5">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="position-relative">
+                    <img src="https://placehold.co/600x400/eee/333?text=Journalism" class="img-fluid rounded shadow-lg" alt="About Us">
+                    <div class="bg-danger text-white p-4 position-absolute bottom-0 start-0 m-3 d-none d-md-block" style="max-width: 250px;">
+                        <h4 class="fw-bold m-0">১৬+ বছর</h4>
+                        <small>নিরবচ্ছিন্ন সংবাদ পরিবেশন</small>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-6 ps-lg-5">
+                <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 fw-bold">আমাদের কথা</h5>
+                </div>
+                <h2 class="fw-bold mb-3">সবার আগে, সব খবর</h2>
+                <p class="text-secondary text-justify lh-lg">
+                    ডেইলি বাংলা টাইমস দেশের অন্যতম শীর্ষস্থানীয় সংবাদমাধ্যম। ২০০৮ সালের জানুয়ারি মাসে মানবাধিকার কর্মী এবং সিভিল সোসাইটি লিডার জাহিদ এফ সরদার সাদী এটি প্রতিষ্ঠা করেন। গণতন্ত্র পুনরুদ্ধার এবং দুর্নীতিবিরোধী সংবাদ প্রকাশের জন্য পত্রিকাটি দ্রুত জনপ্রিয়তা অর্জন করে।
+                </p>
+                <p class="text-secondary text-justify lh-lg">
+                    আমরা বিশ্বাস করি তথ্যের অবাধ প্রবাহে। নিরপেক্ষতা আমাদের মূলমন্ত্র। প্রগতিশীল চিন্তা এবং মুক্তিযুদ্ধের চেতনাকে ধারণ করে আমরা এগিয়ে চলেছি। বর্তমানে যুক্তরাষ্ট্র থেকে পরিচালিত হলেও, আমাদের শিকড় বাংলাদেশের প্রতিটি জনপদে।
+                </p>
+                <img src="https://placehold.co/200x60/transparent/000?text=Signature" alt="Signature" class="mt-3 opacity-50">
+            </div>
+        </div>
 
-                <div class="row mt-5">
-                    <div class="col-lg-12">
-                        <div class="core-values aos-init aos-animate" data-aos="fade-up" data-aos-delay="500">
-                            <h3 class="mb-4">Core Values</h3>
-                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                                <div class="col">
-                                    <div class="value-card">
-                                        <div class="value-icon">
-                                            <i class="bi bi-book"></i>
-                                        </div>
-                                        <h4>Integrity</h4>
-                                        <p>Honesty and transparency guide everything we do.</p>
-                                    </div>
-                                </div>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm mission-card p-4 text-center bg-white">
+                    <div class="mb-3 text-danger"><i class="fas fa-bullseye fa-3x"></i></div>
+                    <h4 class="fw-bold">আমাদের লক্ষ্য</h4>
+                    <p class="text-muted small">নির্ভুল ও নিরপেক্ষ সংবাদ পরিবেশনের মাধ্যমে সমাজের দর্পণ হিসেবে কাজ করা এবং জনসচেতনতা তৈরি করা।</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm mission-card p-4 text-center bg-white">
+                    <div class="mb-3 text-success"><i class="fas fa-eye fa-3x"></i></div>
+                    <h4 class="fw-bold">আমাদের ভিশন</h4>
+                    <p class="text-muted small">ডিজিটাল সাংবাদিকতার মাধ্যমে বিশ্বের প্রতিটি বাংলা ভাষাভাষী মানুষের কাছে পৌঁছে যাওয়া।</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm mission-card p-4 text-center bg-white">
+                    <div class="mb-3 text-primary"><i class="fas fa-hand-holding-heart fa-3x"></i></div>
+                    <h4 class="fw-bold">আমাদের মূল্যবোধ</h4>
+                    <p class="text-muted small">সত্যনিষ্ঠা, সাহসিকতা এবং দেশপ্রেম—এই তিন মূলমন্ত্রে আমরা সর্বদা অবিচল।</p>
+                </div>
+            </div>
+        </div>
 
-                                <div class="col">
-                                    <div class="value-card">
-                                        <div class="value-icon">
-                                            <i class="bi bi-people"></i>
-                                        </div>
-                                        <h4>Excellence</h4>
-                                        <p>We ensure quality and precision in every solution we provide.</p>
-                                    </div>
-                                </div>
+        <div class="section-header-wrapper mb-4 text-center border-0">
+            <h3 class="fw-bold d-inline-block border-bottom border-danger border-3 pb-2">নেতৃত্বে যারা</h3>
+        </div>
 
-                                <div class="col">
-                                    <div class="value-card">
-                                        <div class="value-icon">
-                                            <i class="bi bi-lightbulb"></i>
-                                        </div>
-                                        <h4>Innovation</h4>
-                                        <p>Bringing the latest global technologies to local industries.</p>
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="value-card">
-                                        <div class="value-icon">
-                                            <i class="bi bi-globe"></i>
-                                        </div>
-                                        <h4>Reliability</h4>
-                                        <p>On-time delivery and dependable service.</p>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm team-card h-100">
+                    <div class="team-img-wrapper">
+                        <img src="https://placehold.co/300x350/333/fff?text=Zahid+Saddi" class="card-img-top" alt="Editor">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
+                    <div class="card-body text-center bg-white">
+                        <h5 class="fw-bold mb-1">জাহিদ এফ সরদার সাদী</h5>
+                        <small class="text-danger fw-bold text-uppercase">প্রকাশক ও প্রধান সম্পাদক</small>
+                    </div>
                 </div>
-
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm team-card h-100">
+                    <div class="team-img-wrapper">
+                        <img src="https://placehold.co/300x350/444/fff?text=Editor" class="card-img-top" alt="Member">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body text-center bg-white">
+                        <h5 class="fw-bold mb-1">আব্দুর রহমান</h5>
+                        <small class="text-danger fw-bold text-uppercase">নির্বাহী সম্পাদক</small>
+                    </div>
+                </div>
             </div>
 
-        </section>
-
-        <section id="leadership" class="leadership section">
-
-            <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-
-                <div class="intro-wrapper">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 order-lg-2 mb-5 mb-lg-0 aos-init aos-animate" data-aos="zoom-in"
-                            data-aos-delay="200">
-                            <div class="intro-image">
-                                <img src="assets/img/home/55.jpg" alt="School Leadership" class="img-fluid rounded-lg">
-                                <div class="experience-badge">
-                                    <span class="years">10+</span>
-                                    <span class="text">Years of Educational Excellence</span>
-                                </div>
-                            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm team-card h-100">
+                    <div class="team-img-wrapper">
+                        <img src="https://placehold.co/300x350/555/fff?text=News+Head" class="card-img-top" alt="Member">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
                         </div>
-                        <div class="col-lg-6 order-lg-1 aos-init aos-animate" data-aos="fade-up" data-aos-delay="300">
-                            <div class="intro-content">
-                                <div class="highlights">
-                                    <div class="highlight-item">
-                                        <div class="content">
-                                            <h2>Global Reach, Local Insight</h2>
-                                            <p>With roots in Australia and a footprint
-                                                across continents, we understand both international standards and
-                                                regional needs </p>
-                                        </div>
-                                    </div>
-                                    <div class="highlight-item">
-                                        <div class="content">
-                                            <h2>Regulatory Expertise</h2>
-                                            <p>Our equipment solutions align with GMP, FDA, and
-                                                ISO standards, helping clients meet compliance with confidence</p>
-                                        </div>
-                                    </div>
-                                    <div class="highlight-item">
-                                        <div class="content">
-                                            <h2>Innovation-Driven Partnerships</h2>
-                                            <p>We collaborate with manufacturers at the
-                                                forefront of lab technology, ensuring access to the latest scientific
-                                                advancements</p>
-                                        </div>
-                                    </div>
-                                    <div class="highlight-item">
-                                        <div class="content">
-                                            <h2>AI & Tech-Enabled Support</h2>
-                                            <p>As part of Aurexa Group Pty Ltd, Cellexa
-                                                offers access to AI-driven tools and technology consulting through its
-                                                sister concerns—enhancing operational efficiency and digital
-                                                transformation</p>
-                                        </div>
-                                    </div>
-                                    <div class="highlight-item">
-                                        <div class="content">
-                                            <h2>Client-Centric Approach</h2>
-                                            <p>Every solution is customized, every interaction
-                                                is transparent, and every delivery is backed by our commitment to
-                                                excellence</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="card-body text-center bg-white">
+                        <h5 class="fw-bold mb-1">ফারজানা ইসলাম</h5>
+                        <small class="text-danger fw-bold text-uppercase">বার্তা প্রধান</small>
                     </div>
                 </div>
-
-                <!-- <div class="leadership-section aos-init aos-animate" data-aos="fade-up">
-                    <div class="section-header text-center">
-                        <span class="subtitle">Our Team</span>
-                        <h2 class="title">Meet Our Distinguished Leadership</h2>
-                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet
-                            scelerisque pellentesque. Praesent vestibulum scelerisque scelerisque.</p>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6 aos-init aos-animate" data-aos="fade-up"
-                            data-aos-delay="100">
-                            <div class="team-card">
-                                <div class="card-inner">
-                                    <div class="card-front">
-                                        <div class="member-image">
-                                            <img src="assets/img/home/testimonials-4.jpg" alt="Principal"
-                                                class="img-fluid">
-                                        </div>
-                                        <div class="member-info">
-                                            <h4>Dr. Robert Williams</h4>
-                                            <p>Principal</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-back">
-                                        <h4>Dr. Robert Williams</h4>
-                                        <p class="position">Principal</p>
-                                        <p class="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                                            auctor euismod lobortis.</p>
-                                        <div class="social-links">
-                                            <a href="#"><i class="bi bi-linkedin"></i></a>
-                                            <a href="#"><i class="bi bi-twitter-x"></i></a>
-                                            <a href="#"><i class="bi bi-envelope"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-lg-4 col-md-6 aos-init aos-animate" data-aos="fade-up"
-                            data-aos-delay="200">
-                            <div class="team-card">
-                                <div class="card-inner">
-                                    <div class="card-front">
-                                        <div class="member-image">
-                                            <img src="assets/img/home/testimonials-4.jpg" alt="Vice Principal"
-                                                class="img-fluid">
-                                        </div>
-                                        <div class="member-info">
-                                            <h4>Dr. Jennifer Parker</h4>
-                                            <p>Vice Principal</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-back">
-                                        <h4>Dr. Jennifer Parker</h4>
-                                        <p class="position">Vice Principal</p>
-                                        <p class="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                                            auctor euismod lobortis.</p>
-                                        <div class="social-links">
-                                            <a href="#"><i class="bi bi-linkedin"></i></a>
-                                            <a href="#"><i class="bi bi-twitter-x"></i></a>
-                                            <a href="#"><i class="bi bi-envelope"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-lg-4 col-md-6 aos-init aos-animate" data-aos="fade-up"
-                            data-aos-delay="300">
-                            <div class="team-card">
-                                <div class="card-inner">
-                                    <div class="card-front">
-                                        <div class="member-image">
-                                            <img src="assets/img/home/testimonials-4.jpg" alt="Academic Dean"
-                                                class="img-fluid">
-                                        </div>
-                                        <div class="member-info">
-                                            <h4>Prof. Michael Stevens</h4>
-                                            <p>Academic Dean</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-back">
-                                        <h4>Prof. Michael Stevens</h4>
-                                        <p class="position">Academic Dean</p>
-                                        <p class="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                                            auctor euismod lobortis.</p>
-                                        <div class="social-links">
-                                            <a href="#"><i class="bi bi-linkedin"></i></a>
-                                            <a href="#"><i class="bi bi-twitter-x"></i></a>
-                                            <a href="#"><i class="bi bi-envelope"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-lg-4 col-md-6 aos-init aos-animate" data-aos="fade-up"
-                            data-aos-delay="400">
-                            <div class="team-card">
-                                <div class="card-inner">
-                                    <div class="card-front">
-                                        <div class="member-image">
-                                            <img src="assets/img/home/testimonials-4.jpg" alt="Student Affairs"
-                                                class="img-fluid">
-                                        </div>
-                                        <div class="member-info">
-                                            <h4>Dr. Angela Martinez</h4>
-                                            <p>Student Affairs</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-back">
-                                        <h4>Dr. Angela Martinez</h4>
-                                        <p class="position">Student Affairs</p>
-                                        <p class="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                                            auctor euismod lobortis.</p>
-                                        <div class="social-links">
-                                            <a href="#"><i class="bi bi-linkedin"></i></a>
-                                            <a href="#"><i class="bi bi-twitter-x"></i></a>
-                                            <a href="#"><i class="bi bi-envelope"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
             </div>
 
-        </section>
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm team-card h-100">
+                    <div class="team-img-wrapper">
+                        <img src="https://placehold.co/300x350/666/fff?text=Reporter" class="card-img-top" alt="Member">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body text-center bg-white">
+                        <h5 class="fw-bold mb-1">করিম চৌধুরী</h5>
+                        <small class="text-danger fw-bold text-uppercase">চিফ রিপোর্টার</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </main>
+      
 @endsection
 @section('scripts')
 @endsection

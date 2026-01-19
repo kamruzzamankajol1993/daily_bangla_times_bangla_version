@@ -21,12 +21,23 @@
 @endsection
 
 @section('body')
-    {{-- Bangla Number & Time Converter Helper --}}
+    {{-- Bangla Converter Helper --}}
     @php
         function convertToBangla($str) {
-            $en = ['0','1','2','3','4','5','6','7','8','9', 'am', 'pm', 'AM', 'PM'];
-            $bn = ['০','১','২','৩','৪','৫','৬','৭','৮','৯', 'পূর্বাহ্ণ', 'অপরাহ্ণ', 'পূর্বাহ্ণ', 'অপরাহ্ণ'];
-            return str_replace($en, $bn, $str);
+            $en_num = ['0','1','2','3','4','5','6','7','8','9'];
+            $bn_num = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            
+            $en_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            $bn_months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+
+            $en_am_pm = ['am', 'pm', 'AM', 'PM'];
+            $bn_am_pm = ['পূর্বাহ্ণ', 'অপরাহ্ণ', 'পূর্বাহ্ণ', 'অপরাহ্ণ'];
+
+            $str = str_replace($en_months, $bn_months, $str);
+            $str = str_replace($en_am_pm, $bn_am_pm, $str);
+            $str = str_replace($en_num, $bn_num, $str);
+            
+            return $str;
         }
     @endphp
 
@@ -42,7 +53,7 @@
                             {{-- Author Info --}}
                             <div class="mb-2">
                                 @if($post->author && $post->author->image)
-                                    <img src="{{ asset($post->author->image) }}" class="rounded-circle border" width="80" height="80" alt="{{ $post->author->name }}">
+                                    <img src="{{ $front_admin_url.$post->author->image }}" class="rounded-circle border" width="80" height="80" alt="{{ $post->author->name }}">
                                 @else
                                     <i class="fas fa-user-circle fa-3x text-secondary"></i>
                                 @endif
@@ -59,9 +70,8 @@
                             <div class="text-start small text-secondary lh-sm mb-3" style="font-size: 11px;">
                                 <p class="mb-1">
                                     <strong>প্রকাশিত :</strong> <br>
-                                    {{ convertToBangla($post->created_at->format('d F Y')) }},
-                                    {{-- Using bangladesh_time column if available, else standard format --}}
-                                    {{ convertToBangla($post->bangladesh_time ?? $post->created_at->format('h:i A')) }}
+                                    {{-- Format: 07 October 2025, 09:50:41 PM --}}
+                                    {{ convertToBangla($post->created_at->format('d F Y, h:i:s A')) }}
                                 </p>
                             </div>
 
@@ -87,7 +97,7 @@
                         <div class="alert alert-success no-print">{{ session('success') }}</div>
                     @endif
 
-                    {{-- UPDATED Breadcrumb --}}
+                    {{-- Breadcrumb --}}
                     <nav aria-label="breadcrumb" class="no-print">
                         <ol class="breadcrumb small text-secondary">
                             <li class="breadcrumb-item"><a href="{{ route('front.index') }}" class="text-dark"><i class="fas fa-home"></i></a></li>
@@ -114,44 +124,30 @@
                         <span class="text-secondary fw-bold small">{{ $post->author->name ?? 'ডেস্ক রিপোর্ট' }}</span>
                     </div>
 
-                    {{-- UPDATED Share Buttons --}}
-                    <div class="social-share-bar mb-4 d-flex gap-2 no-print">
-                        {{-- Facebook --}}
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle" title="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        {{-- Twitter/X --}}
-                        <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ $post->title }}" target="_blank" class="btn btn-sm btn-outline-dark rounded-circle" title="X (Twitter)">
-                            <i class="fab fa-x-twitter"></i>
-                        </a>
-                        {{-- LinkedIn --}}
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle" title="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        {{-- WhatsApp --}}
-                        <a href="https://wa.me/?text={{ $post->title }} {{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-success rounded-circle" title="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                        {{-- Email --}}
-                        <a href="mailto:?subject={{ $post->title }}&body=Check out this news: {{ url()->current() }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                         {{-- Instagram (Icon only as API is limited) --}}
-                        <a href="https://www.instagram.com/" target="_blank" class="btn btn-sm btn-outline-danger rounded-circle" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        {{-- Print --}}
-                        <button onclick="window.print()" class="btn btn-sm btn-outline-dark rounded-circle" title="Print">
-                            <i class="fas fa-print"></i>
-                        </button>
+                    {{-- Social Share Bar (Original Design Restored) --}}
+                    <div class="social-share-bar mb-4 d-flex gap-1 no-print">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="share-btn fb"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ $post->title }}" target="_blank" class="share-btn x-tw"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://www.pinterest.com/pin/create/button/?url={{ url()->current() }}" target="_blank" class="share-btn pin"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url()->current() }}" target="_blank" class="share-btn in"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://wa.me/?text={{ $post->title }} {{ url()->current() }}" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i></a>
+                        <a href="mailto:?subject={{ $post->title }}&body={{ url()->current() }}" class="share-btn mail"><i class="fas fa-envelope"></i></a>
+                        <a href="javascript:window.print()" class="share-btn print"><i class="fas fa-print"></i></a>
                     </div>
 
                     {{-- Featured Image --}}
                     <div class="mb-3">
-                        <img src="{{ $post->image ? asset($post->image) : 'https://placehold.co/800x450/eee/333' }}" class="img-fluid w-100 rounded-1" alt="{{ $post->title }}">
+                        <img src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/800x450/eee/333' }}" class="img-fluid w-100 rounded-1" alt="{{ $post->title }}">
                         @if($post->image_caption)
                             <small class="text-muted d-block mt-1 bg-light p-1 border-bottom">{{ $post->image_caption }}</small>
                         @endif
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        @if($post->categories->count() > 0)
+                        <span class="badge bg-danger rounded-0 fw-normal py-2 px-3">{{ $post->categories->first()->name }}</span>
+                        @endif
+                        <span class="badge bg-dark rounded-0 py-2 px-3 ms-1"><i class="fas fa-file-alt"></i></span>
                     </div>
 
                     {{-- Content --}}
@@ -162,10 +158,17 @@
                         
                         {!! $post->content !!}
                     </div>
+
+                    {{-- AD SECTION: Under Content Paragraph --}}
+                    <div class="my-4 p-4 bg-light text-center border no-print">
+                        <small class="text-muted d-block mb-1">ADVERTISEMENT</small>
+                        {{-- আপনার বিজ্ঞাপনের কোড বা ইমেজ এখানে বসান --}}
+                        <img src="https://placehold.co/600x100/ddd/999?text=Content+Bottom+Ad+(600x100)" class="img-fluid" alt="Advertisement">
+                    </div>
                     
                     <hr class="my-5 no-print">
 
-                    {{-- RESTORED: Previous / Next News --}}
+                    {{-- Previous / Next News --}}
                     <div class="row g-3 mb-5 no-print">
                         <div class="col-6">
                             @if($previousPost)
@@ -248,7 +251,7 @@
                                         <h6 class="fw-bold mb-1">
                                             {{ $comment->name }} 
                                             <small class="text-muted fw-normal ms-2" style="font-size: 12px;">
-                                                {{ $comment->created_at->diffForHumans() }}
+                                                {{ convertToBangla($comment->created_at->diffForHumans()) }}
                                             </small>
                                         </h6>
                                         <p class="small text-secondary m-0 mb-2">{{ $comment->body }}</p>
@@ -296,16 +299,6 @@
                 {{-- Sidebar --}}
                 <div class="col-lg-3 no-print">
                     
-                    {{-- RESTORED: Sidebar Ad --}}
-                    <div class="mb-4 text-center">
-                         <div class="bg-light border d-flex align-items-center justify-content-center text-secondary" style="height: 250px; width: 100%;">
-                            <div class="text-center">
-                                <h5 class="fw-bold">AD SPACE</h5>
-                                <small>300x250</small>
-                            </div>
-                        </div>
-                    </div>
-
                     {{-- Latest News --}}
                     <div class="mb-4">
                         <div class="section-header-wrapper mb-3" style="border-bottom: 2px solid #dc3545;">
@@ -314,7 +307,7 @@
                         <div class="d-flex flex-column gap-3">
                             @foreach($latestNews as $lNews)
                             <div class="d-flex align-items-start border-bottom pb-2">
-                                <img src="{{ $lNews->image ? asset($lNews->image) : 'https://placehold.co/90x60/111/fff' }}" class="me-2 rounded-1" width="90">
+                                <img src="{{ $lNews->image ? $front_admin_url.$lNews->image : 'https://placehold.co/90x60/111/fff' }}" class="me-2 rounded-1" width="90">
                                 <a href="{{ route('front.news.details', $lNews->slug) }}" class="small fw-bold text-dark hover-red lh-sm">{{ Str::limit($lNews->title, 50) }}</a>
                             </div>
                             @endforeach
@@ -329,12 +322,23 @@
                         <div class="d-flex flex-column gap-3">
                             @foreach($popularNews as $pNews)
                             <div class="d-flex align-items-start border-bottom pb-2">
-                                <img src="{{ $pNews->image ? asset($pNews->image) : 'https://placehold.co/90x60/222/fff' }}" class="me-2 rounded-1" width="90">
+                                <img src="{{ $pNews->image ? $front_admin_url.$pNews->image : 'https://placehold.co/90x60/222/fff' }}" class="me-2 rounded-1" width="90">
                                 <a href="{{ route('front.news.details', $pNews->slug) }}" class="small fw-bold text-dark hover-red lh-sm">{{ Str::limit($pNews->title, 50) }}</a>
                             </div>
                             @endforeach
                         </div>
                     </div>
+
+                    {{-- AD SECTION: Under Popular News (জনপ্রিয় সংবাদ) --}}
+                    <div class="mb-4 text-center">
+                         <div class="bg-light border d-flex align-items-center justify-content-center text-secondary" style="height: 250px; width: 100%;">
+                            <div class="text-center">
+                                <h5 class="fw-bold">AD SPACE</h5>
+                                <small>Sidebar Bottom (300x250)</small>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -374,13 +378,13 @@
                 type: type
             },
             success: function(response) {
-                // Update specific count
-                let countSpan = $('#count-' + type);
-                // Simple increment visual (assumes we are adding, accurate logic requires fetching fresh count)
-                // Getting current text, converting BN to EN to add 1, then back to BN is complex in JS
-                // Simplified: just reloading the page or assuming +1 for UX feedback
-                
-                // For now, let's just trigger a toast
+                // Update ALL buttons with new Bangla counts
+                $('#count-like').text(toBanglaNum(response.like));
+                $('#count-love').text(toBanglaNum(response.love));
+                $('#count-haha').text(toBanglaNum(response.haha));
+                $('#count-sad').text(toBanglaNum(response.sad));
+                $('#count-angry').text(toBanglaNum(response.angry));
+
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
@@ -391,9 +395,6 @@
                     icon: 'success',
                     title: 'ধন্যবাদ! আপনার প্রতিক্রিয়া গ্রহণ করা হয়েছে।'
                 });
-                
-                // Note: To update the number accurately without reload, the controller 
-                // should return the new total count, and we should update the span text.
             },
             error: function(xhr) {
                 console.log(xhr.responseText);

@@ -8,8 +8,8 @@
             </div>
             
             <div class="col-md-4">
-                <form class="d-flex search-bar-top">
-                    <input class="form-control rounded-0" type="search" placeholder="এখানে অনুসন্ধান করুন..." aria-label="Search">
+                <form class="d-flex search-bar-top" action="{{ route('front.search') }}" method="GET">
+                    <input class="form-control rounded-0" name="q" type="search" placeholder="এখানে অনুসন্ধান করুন..." aria-label="Search">
                     <button class="btn btn-success rounded-0" type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>

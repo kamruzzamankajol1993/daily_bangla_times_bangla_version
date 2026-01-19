@@ -12,16 +12,62 @@
         top: 0; left: 0; right: 0; bottom: 0;
         background: rgba(255, 255, 255, 0.8);
         z-index: 10;
-        display: none; /* Hidden by default */
+        display: none;
         align-items: center;
         justify-content: center;
     }
     
-    /* Smooth transition for content replacement */
     #post-data-container {
         position: relative;
         min-height: 400px;
         transition: opacity 0.3s ease;
+    }
+
+    /* --- Custom Pagination CSS --- */
+    .custom-pagination {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    .custom-pagination .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ddd;
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 0; /* Square box design */
+        transition: all 0.3s ease;
+        background: #fff;
+        cursor: pointer;
+    }
+    .custom-pagination .page-link:hover {
+        background-color: #f8f9fa;
+        color: #dc3545; /* Red hover */
+        border-color: #dc3545;
+    }
+    .custom-pagination .page-link.active {
+        background-color: #dc3545; /* Red Active */
+        color: #fff;
+        border-color: #dc3545;
+    }
+    .custom-pagination .page-link.disabled {
+        color: #ccc;
+        pointer-events: none;
+        background: #f9f9f9;
+        border-color: #eee;
+    }
+
+    /* --- Fixed Sidebar CSS --- */
+    /* Ensure the parent row has alignment that supports sticky */
+    .sticky-sidebar-wrapper {
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 90px; /* Adjust based on your header height */
+        z-index: 5;
     }
 </style>
 @endsection
@@ -58,13 +104,15 @@
 
                 </div>
 
-                {{-- SIDEBAR AD COLUMN --}}
+                {{-- SIDEBAR AD COLUMN (FIXED) --}}
                 <div class="col-lg-3">
-                    <div class="sticky-top" style="top: 100px; z-index: 5;">
+                    {{-- Sticky Wrapper Class Added Here --}}
+                    <div class="sticky-sidebar-wrapper">
                         <div class="bg-light border d-flex align-items-center justify-content-center text-secondary" style="height: 600px; width: 100%;">
                             <div class="text-center">
                                 <h5 class="fw-bold">AD SPACE</h5>
                                 <small>300x600</small>
+                                <p class="small text-muted mt-2">(Fixed on Scroll)</p>
                             </div>
                         </div>
                     </div>
@@ -80,12 +128,17 @@
 <script>
     $(document).ready(function() {
         
-        // Handle Pagination Click
-        $(document).on('click', '.pagination a', function(event) {
+        // Handle Custom Pagination Click (Selector Updated)
+        $(document).on('click', '.custom-pagination .page-link', function(event) {
             event.preventDefault(); // Prevent default browser reload
             
-            let pageUrl = $(this).attr('href'); // Get the URL (e.g., ...?page=2)
+            let pageUrl = $(this).attr('href'); // Get the URL
             
+            // Check if URL exists (to prevent error on disabled buttons)
+            if(!pageUrl || pageUrl === '#' || $(this).hasClass('disabled') || $(this).hasClass('active')) {
+                return;
+            }
+
             // 1. Show Loading State
             $('#loading-overlay').fadeIn(200);
             $('#post-data-container').css('opacity', '0.6');
@@ -104,7 +157,7 @@
                 // 3. Update Content
                 $('#post-data-container').empty().html(data);
                 
-                // Re-add loading overlay structure (because empty() removed it)
+                // Re-add loading overlay structure
                 $('#post-data-container').prepend(`
                     <div id="loading-overlay">
                         <div class="spinner-border text-danger" role="status">
@@ -113,11 +166,10 @@
                     </div>
                 `);
 
-                // 4. Update Browser URL History (Advanced UX)
-                // This allows the user to use the "Back" button correctly
+                // 4. Update URL History
                 window.history.pushState({path: url}, '', url);
                 
-                // 5. Scroll to top of container smoothly
+                // 5. Scroll to top
                 $('html, body').animate({
                     scrollTop: $(".category-body").offset().top - 60
                 }, 500);
@@ -126,7 +178,7 @@
                 $('#post-data-container').css('opacity', '1');
             })
             .fail(function(jqXHR, ajaxOptions, thrownError) {
-                alert('No response from server');
+                alert('সার্ভার থেকে রেসপন্স পাওয়া যায়নি।');
                 $('#loading-overlay').fadeOut();
                 $('#post-data-container').css('opacity', '1');
             });

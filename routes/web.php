@@ -20,10 +20,15 @@ Route::get('/video-gallery/{slug}', [App\Http\Controllers\Front\FrontController:
 Route::post('/contact-us-post', [App\Http\Controllers\Front\FrontController::class, 'contactUsPost'])->name('front.contactUsPost');
 Route::controller(FrontController::class)->group(function () {
 
-
+Route::get('/load-more-news', 'getMoreNews')->name('front.load.more.news');
     Route::get('/', 'index')->name('front.index');
-    Route::get('/about_us', 'aboutUs')->name('front.aboutUs');
+    Route::get('/about-us', 'aboutUs')->name('front.aboutUs');
     Route::get('/contact-us', 'contactUs')->name('front.contactUs');
+    Route::get('/privacy-policy', 'privacyPolicy')->name('front.privacyPolicy');
+    Route::get('/terms-condition', 'termsCondition')->name('front.termsCondition');
+    Route::get('/archive', 'archive')->name('front.archive');
+    Route::get('/team', 'team')->name('front.team');
+
     Route::post('/contact-us-post', 'contactUsPost')->name('front.contactUsPost');
     Route::get('/services', 'services')->name('front.services');
 
@@ -32,7 +37,7 @@ Route::controller(FrontController::class)->group(function () {
   
     Route::get('/news/{slug}', 'newsDetails')->name('front.news.details');
 
-});
+});Route::get('/search', [FrontController::class, 'search'])->name('front.search');
    
 Route::post('/comment-store', [FrontController::class, 'storeComment'])->name('front.comment.store');
 Route::post('/reaction-store', [FrontController::class, 'storeReaction'])->name('front.reaction.store');

@@ -19,419 +19,247 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\VideoNews;
 use App\Models\Reaction;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Cache;
+use App\Models\ExtraPage;
 class FrontController extends Controller
 {
 
 
+// =========================================================
+    // ১. হেল্পার ফাংশন (ক্যাশিং এবং অপ্টিমাইজেশন সহ)
+    // =========================================================
+    private function getCachedPosts($key, $categoryId, $limit = 5)
+    {
+        // ১০ মিনিটের (৬০০ সেকেন্ড) জন্য ক্যাশ করা হচ্ছে
+        return Cache::remember($key, 600, function () use ($categoryId, $limit) {
+            
+            // কমন কলাম এবং কন্টেন্ট লিমিট (মাত্র ২০০০ ক্যারেক্টার)
+            $selectCols = 'id, title, slug, image, subtitle, created_at, category_id, view_count, LEFT(content, 2000) as content';
 
-    
-   public function index()
-{
-// ১. সর্বশেষ ১০টি নিউজ (Latest)
-    $latestPosts = Post::where('status', 'approved')
-                       ->where('draft_status', 0)
-                       ->where('trash_status', 0)
-                       ->where('language', 'bn')
-                       ->orderBy('id', 'desc')
-                       ->take(10)
-                       ->get();
+            $query = Post::with(['categories:id,name,slug'])
+                ->selectRaw($selectCols)
+                ->where('status', 'approved')
+                ->where('draft_status', 0)
+                ->where('trash_status', 0)
+                ->where('language', 'bn');
 
-    // ২. জনপ্রিয় ১০টি নিউজ (Popular - View Count এর ভিত্তিতে)
-    $popularPosts = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('language', 'bn')
-                        ->where('trash_status', 0)
-                        ->orderBy('view_count', 'desc')
-                        ->take(10)
-                        ->get();
-    $madamUnderNews = Post::where('status', 'approved')
-                          ->where('draft_status', 0)
-                          ->where('trash_status', 0)
-                          ->where('language', 'bn') 
-                          ->where('home_page_position', 'under_madam_image') // কন্ডিশন
-                          ->orderBy('id', 'desc')
-                          ->take(8)
-                          ->get();
-
-    $sliderPosts = Post::where('status', 'approved')
-                       ->where('draft_status', 0)
-                       ->where('trash_status', 0)
-                       ->where('language', 'bn') 
-                       ->where('home_page_position', 'slider') // কন্ডিশন: slider
-                       ->orderBy('id', 'desc')
-                       ->take(5) // সাধারণত স্লাইডারে ৩-৫টি নিউজ থাকে
-                       ->get();
-
-    $targetCategoryIds = [110, 111, 113, 133]; 
-
-    $randomNews = Post::where('status', 'approved')
-                      ->where('draft_status', 0)
-                      ->where('trash_status', 0)
-                      ->where('language', 'bn')
-                      ->whereIn('category_id', $targetCategoryIds) // ক্যাটাগরি ফিল্টার
-                      ->inRandomOrder() // র‍্যান্ডমলি ডাটা আনবে
-                      ->take(6) // ৬টি নিউজ
-                      ->get();
-
-    $englishNews = Post::where('status', 'approved')
-                       ->where('draft_status', 0)
-                       ->where('trash_status', 0)
-                       ->where('language', 'en') // ইংরেজি ভাষা ফিল্টার
-                       ->orderBy('id', 'desc')
-                       ->take(4)
-                       ->get();
-
-    $internationalNews = Post::where('status', 'approved')
-                             ->where('draft_status', 0)
-                             ->where('trash_status', 0)
-                             ->where('language', 'bn')
-                             ->where('category_id', 111) // <--- এখানে সঠিক ID দিন
-                             ->orderBy('id', 'desc')
-                             ->take(6)
+            // ১. যদি একাধিক ক্যাটাগরি (Array) হয়
+            if (is_array($categoryId)) {
+                return $query->whereIn('category_id', $categoryId)
+                             ->inRandomOrder()
+                             ->take($limit)
                              ->get();
+            }
 
-    // ৮. মতামত (Opinion) - ২ টি
-    // [নোট: এখানে 'category_id' 8 এর জায়গায় আপনার মতামত ক্যাটাগরির সঠিক ID বসান]
-    $opinionNews = Post::where('status', 'approved')
-                       ->where('draft_status', 0)
-                       ->where('trash_status', 0)
-                       ->where('language', 'bn')
-                       ->where('category_id', 118) // <--- এখানে সঠিক ID দিন
-                       ->orderBy('id', 'desc')
-                       ->take(2)
-                       ->get();
+            // ২. সাধারণ ক্যাটাগরি ফিল্টার
+            if ($categoryId) {
+                $query->where('category_id', $categoryId);
+            }
 
-    $nationalNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 110) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+            $posts = $query->orderBy('id', 'desc')->take($limit)->get();
 
-    // ১০. রাজনীতি (Politics News) - ৫টি
-    // [নোট: এখানে 'category_id' 6 এর জায়গায় আপনার 'রাজনীতি' ক্যাটাগরির সঠিক ID বসান]
-    $politicsNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 133) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+            // ৩. ফলব্যাক লজিক (Pivot Table Check)
+            if ($categoryId && $posts->count() == 0) {
+                return Post::with(['categories:id,name,slug'])
+                    ->selectRaw($selectCols)
+                    ->where('status', 'approved')
+                    ->where('draft_status', 0)
+                    ->where('trash_status', 0)
+                    ->where('language', 'bn')
+                    ->whereHas('categories', function ($q) use ($categoryId) {
+                        $q->where('categories.id', $categoryId);
+                    })
+                    ->orderBy('id', 'desc')
+                    ->take($limit)
+                    ->get();
+            }
 
-    // ১১. অর্থনীতি (Economy News) - ৫টি
-    // [নোট: এখানে 'category_id' 9 এর জায়গায় আপনার 'অর্থনীতি' ক্যাটাগরির সঠিক ID বসান]
-    $economyNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 119) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    $sportsNews = Post::where('status', 'approved')
-                      ->where('draft_status', 0)
-                      ->where('trash_status', 0)
-                      ->where('language', 'bn')
-                      ->where('category_id', 113) // <--- সঠিক ID দিন
-                      ->orderBy('id', 'desc')
-                      ->take(11) 
-                      ->get();
-
-    $lawCourtsNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 126) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    $exclusiveNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 143) // প্রথমে পোস্ট টেবিলে চেক করবে
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    // কন্ডিশন: যদি পোস্ট টেবিলের ডাটা ০ হয়, তাহলে পোস্ট ক্যাটাগরি (Pivot Table) থেকে আনবে
-    if ($exclusiveNews->count() == 0) {
-        $exclusiveNews = Post::where('status', 'approved')
-                            ->where('draft_status', 0)
-                            ->where('trash_status', 0)
-                            ->where('language', 'bn')
-                            // categories রিলেশনশিপ ব্যবহার করে post_category টেবিল চেক করা হচ্ছে
-                            ->whereHas('categories', function ($query) {
-                                $query->where('categories.id', 143); // Category ID
-                            })
-                            ->orderBy('id', 'desc')
-                            ->take(5)
-                            ->get();
+            return $posts;
+        });
     }
 
-    // ১৫. স্বাস্থ্য (Health News) - ৫টি
-    // [নোট: এখানে 'category_id' 13 এর জায়গায় আপনার 'স্বাস্থ্য' ক্যাটাগরির সঠিক ID বসান]
-    $healthNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 115) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+   // =========================================================
+    // ১. মেইন ইনডেক্স (শুধু উপরের অংশ সার্ভার সাইড লোড হবে - SEO এর জন্য)
+    // =========================================================
+    public function index()
+    {
+        // কমন কলাম সিলেক্টর
+        $selectCols = 'id, title, slug, image, subtitle, created_at, category_id, view_count, LEFT(content, 2000) as content';
 
-    $entertainmentNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 114) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(9)
-                        ->get();
+        // ১. সর্বশেষ খবর (Latest)
+        $latestPosts = Cache::remember('home_latest', 300, function () use ($selectCols) {
+            return Post::with('categories:id,name,slug')->selectRaw($selectCols)
+                ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
+                ->orderBy('id', 'desc')->take(10)->get();
+        });
 
-    $shareMarketNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 127) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+        // ২. জনপ্রিয় খবর (Popular)
+        $popularPosts = Cache::remember('home_popular', 300, function () use ($selectCols) {
+            return Post::selectRaw($selectCols)
+                ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
+                ->orderBy('view_count', 'desc')->take(10)->get();
+        });
 
-    // ১৮. জবস (Jobs) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $jobsNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 128) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+        // ৩. ম্যাডাম নিউজ
+        $madamUnderNews = Cache::remember('home_madam', 600, function () use ($selectCols) {
+            return Post::selectRaw($selectCols)
+                ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
+                ->where('home_page_position', 'under_madam_image')
+                ->orderBy('id', 'desc')->take(8)->get();
+        });
 
-    // ১৯. কৃষি (Agriculture) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $agricultureNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 129) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+        // ৪. স্লাইডার
+        $sliderPosts = Cache::remember('home_slider', 600, function () use ($selectCols) {
+            return Post::selectRaw($selectCols)
+                ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
+                ->where('home_page_position', 'slider')
+                ->orderBy('id', 'desc')->take(5)->get();
+        });
+        
+        // ৫. র‍্যান্ডম নিউজ (স্লাইডারের নিচে ছোট বক্সগুলো)
+        $randomNews = $this->getCachedPosts('home_random', [110, 111, 113, 133], 6);
 
-    
-
-     $miscNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 121) // প্রথমে পোস্ট টেবিলে চেক করবে
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    // কন্ডিশন: যদি পোস্ট টেবিলের ডাটা ০ হয়, তাহলে পোস্ট ক্যাটাগরি (Pivot Table) থেকে আনবে
-    if ($miscNews->count() == 0) {
-        $miscNews = Post::where('status', 'approved')
-                            ->where('draft_status', 0)
-                            ->where('trash_status', 0)
-                            ->where('language', 'bn')
-                            // categories রিলেশনশিপ ব্যবহার করে post_category টেবিল চেক করা হচ্ছে
-                            ->whereHas('categories', function ($query) {
-                                $query->where('categories.id', 121); // Category ID
-                            })
-                            ->orderBy('id', 'desc')
-                            ->take(5)
-                            ->get();
+        return view('front.home_page.index', compact(
+            'latestPosts', 'popularPosts', 'madamUnderNews', 'sliderPosts', 'randomNews'
+        ));
     }
 
+    // =========================================================
+    // ২. লোড মোর নিউজ (AJAX দিয়ে নিচের অংশ লোড হবে)
+    // =========================================================
+    // =========================================================
+    // ২. লোড মোর নিউজ (AJAX - সব কুয়েরি যুক্ত করা হয়েছে)
+    // =========================================================
+    public function getMoreNews(Request $request)
+    {
+        // স্টেপ বা পেজ নম্বর (ডিফল্ট ১)
+        $step = $request->input('step', 1);
+        
+        $html = '';
+        $hasMore = true;
 
-    $artsLiteratureNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 120) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+        switch ($step) {
+            case 1:
+                // ====================================================
+                // ব্যাচ ১: ইংরেজি, আন্তর্জাতিক, ক্যাটাগরি গ্রিড (জাতীয়, রাজনীতি...), খেলা
+                // ====================================================
+                
+                // ১. ইংরেজি
+                $englishNews = Cache::remember('home_english', 600, function () {
+                    return Post::selectRaw('id, title, slug, image, subtitle, created_at, category_id, LEFT(content, 2000) as content')
+                        ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'en')
+                        ->orderBy('id', 'desc')->take(4)->get();
+                });
 
-    // ২২. ফিচার (Feature) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $featureNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 141) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+                // ২. আন্তর্জাতিক
+                $internationalNews = $this->getCachedPosts('home_international', 111, 6);
 
-    // ২৩. নারী (Women) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $womenNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 124) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
+                // ৩. ক্যাটাগরি গ্রিড (Category Grid) এর জন্য ভেরিয়েবল
+                $nationalNews = $this->getCachedPosts('home_national', 110, 5);
+                $politicsNews = $this->getCachedPosts('home_politics', 133, 5);
+                $economyNews  = $this->getCachedPosts('home_economy', 119, 5);
+                $opinionNews  = $this->getCachedPosts('home_opinion', 118, 2);
 
-    $lifestyleNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 117) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(7)
-                        ->get();
+              //  dd($opinionNews);
 
-     if ($lifestyleNews->count() == 0) {
-        $lifestyleNews = Post::where('status', 'approved')
-                            ->where('draft_status', 0)
-                            ->where('trash_status', 0)
-                            ->where('language', 'bn')
-                            // categories রিলেশনশিপ ব্যবহার করে post_category টেবিল চেক করা হচ্ছে
-                            ->whereHas('categories', function ($query) {
-                                $query->where('categories.id', 117); // Category ID
-                            })
-                            ->orderBy('id', 'desc')
-                            ->take(5)
-                            ->get();
+                // ৪. খেলা
+                $sportsNews = $this->getCachedPosts('home_sports', 113, 11);
+
+                // HTML রেন্ডার
+                $html .= view('front.home_page._partial.englishNew', compact('englishNews'))->render();
+                $html .= view('front.home_page._partial.internationalNews', compact('internationalNews','opinionNews'))->render();
+                // categoryGrid এর ভেতরে national, politics, economy, opinion ভেরিয়েবলগুলো লাগে
+                $html .= view('front.home_page._partial.categoryGrid', compact('nationalNews', 'politicsNews', 'economyNews', 'opinionNews'))->render();
+                $html .= view('front.home_page._partial.sports', compact('sportsNews'))->render();
+                break;
+
+            case 2:
+                // ====================================================
+                // ব্যাচ ২: আইন ও এক্সক্লুসিভ, বিনোদন, আর্টস ও ফিচার
+                // ====================================================
+
+                $lawCourtsNews      = $this->getCachedPosts('home_law', 126, 5);
+                $exclusiveNews      = $this->getCachedPosts('home_exclusive', 143, 5);
+                $entertainmentNews  = $this->getCachedPosts('home_entertainment', 114, 9);
+                
+                $artsLiteratureNews = $this->getCachedPosts('home_arts', 120, 5);
+                $featureNews        = $this->getCachedPosts('home_feature', 141, 5);
+   $healthNews      = $this->getCachedPosts('home_health', 115, 5);
+   $womenNews       = $this->getCachedPosts('home_women', 124, 5);
+                // HTML রেন্ডার
+                $html .= view('front.home_page._partial.lawAndExclusive', compact('lawCourtsNews', 'exclusiveNews','healthNews'))->render();
+                $html .= view('front.home_page._partial.entertainment', compact('entertainmentNews'))->render();
+                 
+                // বিজ্ঞাপন সেকশন (স্ট্যাটিক)
+                $html .= '<section class="ad-section py-4 bg-light"><div class="container"><div class="d-flex justify-content-center"><div style="width: 980px; max-width: 100%; height: 120px; background-color: #ddd; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">AD SPACE 980x120</div></div></div></section>';
+                
+                $html .= view('front.home_page._partial.artsAndFeature', compact('artsLiteratureNews', 'featureNews','womenNews'))->render();
+                break;
+
+            case 3:
+                // ====================================================
+                // ব্যাচ ৩: লাইফস্টাইল, নারী, অন্যান্য ক্যাটাগরি, সারাদেশ
+                // ====================================================
+
+                $lifestyleNews   = $this->getCachedPosts('home_lifestyle', 117, 7);
+                // নারী ও শিশু
+                
+                // More Categories
+                $healthNews      = $this->getCachedPosts('home_health', 115, 5);
+                $shareMarketNews = $this->getCachedPosts('home_sharemarket', 127, 5);
+                $jobsNews        = $this->getCachedPosts('home_jobs', 128, 5);
+                $agricultureNews = $this->getCachedPosts('home_agriculture', 129, 5);
+                
+                // সারাদেশ ও বিভাগ
+                $saradeshNews    = $this->getCachedPosts('home_saradesh', 132, 5);
+                $divisions = Cache::remember('home_divisions', 3600, function () {
+                    return Category::select('id', 'name', 'slug')->where('status', 1)->whereNull('parent_id')->has('children')->with('children:id,name,slug,parent_id')->get();
+                });
+$miscNews         = $this->getCachedPosts('home_misc', 121, 5);
+                // HTML রেন্ডার
+                // লাইফস্টাইল পার্শিয়ালের ভেতর womenNews লাগতে পারে
+                $html .= view('front.home_page._partial.lifestyle', compact('lifestyleNews'))->render(); 
+                $html .= view('front.home_page._partial.moreCategories', compact('miscNews','shareMarketNews', 'jobsNews', 'agricultureNews'))->render();
+                $html .= view('front.home_page._partial.sharadeshDistrict', compact('saradeshNews', 'divisions'))->render();
+                break;
+
+            case 4:
+                // ====================================================
+                // ব্যাচ ৪: মিক্সড ক্যাটাগরি (সোশ্যাল, বিজনেস...), ফটো ও ভিডিও
+                // ====================================================
+
+                // মিক্সড ক্যাটাগরি ভেরিয়েবল
+                $socialMediaNews  = $this->getCachedPosts('home_social', 125, 5);
+                $businessNews     = $this->getCachedPosts('home_business', 134, 5);
+                $religionLifeNews = $this->getCachedPosts('home_religion', 136, 5);
+                $sciTechNews      = $this->getCachedPosts('home_scitech', 116, 5);
+                 // বিচিত্র খবর
+
+                // ফটো ও ভিডিও
+                $photoGalleryNews = $this->getCachedPosts('home_photo', 137, 7);
+                $videoGalleryNews = Cache::remember('home_videos', 600, function () {
+                    return VideoNews::select('id', 'title', 'slug', 'thumbnail')->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')->orderBy('id', 'desc')->take(9)->get();
+                });
+
+                // HTML রেন্ডার
+                $html .= view('front.home_page._partial.mixedCategory', compact('socialMediaNews', 'businessNews', 'religionLifeNews', 'sciTechNews'))->render();
+                $html .= view('front.home_page._partial.photoGallery', compact('photoGalleryNews'))->render();
+                $html .= view('front.home_page._partial.videoGallery', compact('videoGalleryNews'))->render();
+                
+                $hasMore = false; // শেষ ধাপ
+                break;
+                
+            default:
+                $hasMore = false;
+                break;
+        }
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $hasMore,
+            'nextStep' => $step + 1
+        ]);
     }
-
-    $saradeshNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 132) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    $divisions = Category::where('status', 1) // যদি স্ট্যাটাস কলাম থাকে
-                         ->whereNull('parent_id') // প্যারেন্ট ক্যাটাগরি (বিভাগ)
-                         ->has('children') // শর্ত: যাদের চাইল্ড আছে তাদেরই আনবে
-                         ->with('children') // সাথে চাইল্ড ডাটাও লোড করে নিচ্ছি
-                         ->get();
-
-    $photoGalleryNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        // আপনার ফটো গ্যালারি যদি ইংলিশ হয় তবে 'en' দিন, বাংলা হলে 'bn'
-                         ->where('language', 'bn') 
-                        ->where('category_id', 137) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(7)
-                        ->get();
-
-                        if ($photoGalleryNews->count() == 0) {
-        $photoGalleryNews = Post::where('status', 'approved')
-                            ->where('draft_status', 0)
-                            ->where('trash_status', 0)
-                            ->where('language', 'bn')
-                            // categories রিলেশনশিপ ব্যবহার করে post_category টেবিল চেক করা হচ্ছে
-                            ->whereHas('categories', function ($query) {
-                                $query->where('categories.id', 137); // Category ID
-                            })
-                            ->orderBy('id', 'desc')
-                            ->take(5)
-                            ->get();
-    }
-
-    $videoGalleryNews = VideoNews::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        // যদি ল্যাঙ্গুয়েজ ফিল্টার লাগে
-                         ->where('language', 'bn') 
-                        ->orderBy('id', 'desc')
-                        ->take(9)
-                        ->get();
-
-    $socialMediaNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 125) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    // ৩০. ব্যবসা বানিজ্য (Business) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $businessNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 134) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    // ৩১. ধর্ম ও জীবন (Religion & Life) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $religionLifeNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 136) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-
-    // ৩২. বিজ্ঞান ও প্রযুক্তি (Science & Technology) - ৫টি
-    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
-    $sciTechNews = Post::where('status', 'approved')
-                        ->where('draft_status', 0)
-                        ->where('trash_status', 0)
-                        ->where('language', 'bn')
-                        ->where('category_id', 116) // <--- সঠিক ID দিন
-                        ->orderBy('id', 'desc')
-                        ->take(5)
-                        ->get();
-    return view('front.home_page.index',
-     compact(
-        'latestPosts',
-        'popularPosts',
-        'madamUnderNews',
-        'sliderPosts', 
-        'randomNews', 
-        'englishNews', 
-        'internationalNews',
-        'opinionNews',
-        'nationalNews',
-        'politicsNews',
-        'economyNews',
-        'sportsNews',
-        'lawCourtsNews',
-        'exclusiveNews',
-        'healthNews',
-        'entertainmentNews',
-        'shareMarketNews',
-        'jobsNews',
-        'agricultureNews',
-         'miscNews',
-        'artsLiteratureNews',
-        'featureNews',
-        'womenNews',
-        'lifestyleNews',
-        'saradeshNews',
-        'divisions',
-        'photoGalleryNews',
-        'videoGalleryNews',
-        'socialMediaNews',
-        'businessNews',
-        'religionLifeNews',
-        'sciTechNews'
-
-         ));
-}
 
 
 public function newsList(Request $request, $slug)
@@ -447,6 +275,7 @@ public function newsList(Request $request, $slug)
                 ->where('status', 'approved')
                 ->where('draft_status', 0)
                 ->where('trash_status', 0)
+                       ->where('language', 'bn')
                 ->orderBy('id', 'desc')
                 ->paginate(12); // Grid layout, usually multiples of 3 or 4 are best
 
@@ -481,6 +310,7 @@ public function newsDetails($slug)
         'reactions as sad_count' => function ($q) { $q->where('type', 'sad'); },
         'reactions as angry_count' => function ($q) { $q->where('type', 'angry'); }
     ])
+           ->where('language', 'bn')
     ->where('slug', $slug)
     ->firstOrFail();
 
@@ -491,6 +321,7 @@ public function newsDetails($slug)
     $previousPost = Post::where('id', '<', $post->id)
                         ->where('status', 'approved')
                         ->where('draft_status', 0)
+                               ->where('language', 'bn')
                         ->where('trash_status', 0)
                         ->orderBy('id', 'desc')
                         ->first();
@@ -499,12 +330,13 @@ public function newsDetails($slug)
                     ->where('status', 'approved')
                     ->where('draft_status', 0)
                     ->where('trash_status', 0)
+                           ->where('language', 'bn')
                     ->orderBy('id', 'asc')
                     ->first();
 
     // 4. Sidebar Data
-    $latestNews = Post::where('status', 'approved')->where('trash_status', 0)->latest()->take(5)->get();
-    $popularNews = Post::where('status', 'approved')->where('trash_status', 0)->orderBy('view_count', 'desc')->take(5)->get();
+    $latestNews = Post::where('status', 'approved')       ->where('language', 'bn')->where('trash_status', 0)->latest()->take(5)->get();
+    $popularNews = Post::where('status', 'approved')->where('language', 'bn')->where('trash_status', 0)->orderBy('view_count', 'desc')->take(5)->get();
 
     return view('front.news.details', compact('post', 'previousPost', 'nextPost', 'latestNews', 'popularNews'));
 }
@@ -538,7 +370,7 @@ public function storeReaction(Request $request)
         'type' => 'required|in:like,love,haha,sad,angry'
     ]);
 
-    // Check if IP already reacted to this post
+    // 1. Update or Create the Reaction
     $existing = Reaction::where('post_id', $request->post_id)
                         ->where('ip_address', $request->ip())
                         ->first();
@@ -555,7 +387,16 @@ public function storeReaction(Request $request)
         ]);
     }
 
-    return response()->json(['message' => 'Reaction Saved']);
+    // 2. Fetch Fresh Counts for ALL types (to handle switching reactions)
+    $counts = [
+        'like' => Reaction::where('post_id', $request->post_id)->where('type', 'like')->count(),
+        'love' => Reaction::where('post_id', $request->post_id)->where('type', 'love')->count(),
+        'haha' => Reaction::where('post_id', $request->post_id)->where('type', 'haha')->count(),
+        'sad'  => Reaction::where('post_id', $request->post_id)->where('type', 'sad')->count(),
+        'angry'=> Reaction::where('post_id', $request->post_id)->where('type', 'angry')->count(),
+    ];
+
+    return response()->json($counts);
 }
 
 
@@ -570,6 +411,7 @@ public function videoDetail($slug)
     // রিলেটেড বা অন্যান্য ভিডিও
     $relatedVideos = VideoNews::where('slug', '!=', $slug)
                         ->where('status', 'approved')
+
                         ->where('draft_status', 0)
                         ->where('trash_status', 0)
                         ->orderBy('id', 'desc')
@@ -578,6 +420,194 @@ public function videoDetail($slug)
 
     return view('front.video_gallery.detail', compact('video', 'relatedVideos'));
 }
+
+
+public function search(Request $request)
+{
+    $query = $request->input('q');
+    $categoryId = $request->input('category');
+    $timeFilter = $request->input('time');
+    $sort = $request->input('sort', 'desc');
+
+
+    //dd($query);
+
+    $posts = Post::query()
+        ->with('categories')
+        ->where('status', 'approved')
+           ->where('language', 'bn')
+        ->where('draft_status', 0)
+        ->where('trash_status', 0)
+        ->where('language', 'bn');
+
+    // 1. Keyword Search
+    if (!empty($query)) {
+        $posts->where(function($q) use ($query) {
+            $q->where('title', 'like', "%{$query}%")
+              ->orWhere('subtitle', 'like', "%{$query}%")
+              ->orWhere('content', 'like', "%{$query}%");
+        });
+    }
+
+    // 2. Category Filter
+    if (!empty($categoryId) && $categoryId != 'all') {
+        $posts->whereHas('categories', function($q) use ($categoryId) {
+            $q->where('categories.id', $categoryId);
+        });
+    }
+
+    // 3. Time Filter
+    if (!empty($timeFilter)) {
+        switch ($timeFilter) {
+            case '24h':
+                $posts->where('created_at', '>=', Carbon::now()->subDay());
+                break;
+            case '7d':
+                $posts->where('created_at', '>=', Carbon::now()->subDays(7));
+                break;
+            case '30d':
+                $posts->where('created_at', '>=', Carbon::now()->subDays(30));
+                break;
+        }
+    }
+
+    // 4. Sorting
+    $posts->orderBy('created_at', $sort == 'old' ? 'asc' : 'desc');
+
+    // 5. Pagination (Append query params)
+    $results = $posts->paginate(10)->withQueryString();
+
+    // 6. Handle AJAX Request
+    if ($request->ajax()) {
+        return view('front.search.search_results_partial', compact('results', 'query'))->render();
+    }
+
+    $categories = Category::where('status', 1)->select('id', 'name')->get();
+
+    return view('front.search.search', compact('results', 'categories', 'query'));
+}
+
+
+public function aboutUs()
+    {
+
+
+        return view('front.about_us');
+    }
+
+
+
+    public function contactUs()
+    {
+        return view('front.contact_us');
+    }
+
+
+
+    public function team()
+    {
+        return view('front.team');
+    }
+public function archive(Request $request)
+{
+    // ১. ইনপুট নেওয়া (ডিফল্ট আজকের তারিখ অথবা রিকোয়েস্টের তারিখ)
+    $searchDate = $request->input('date');
+    $searchCategory = $request->input('category');
+    
+    // ২. কুয়েরি বিল্ডার শুরু
+    $query = Post::with('categories')
+        ->where('status', 'approved')
+        ->where('draft_status', 0)
+        ->where('trash_status', 0)
+        ->where('language', 'bn'); // বাংলা নিউজ
+
+    // ৩. ফিল্টার লজিক
+    if ($searchDate) {
+        $query->whereDate('created_at', $searchDate);
+    }
+    
+    if ($searchCategory && $searchCategory != 'all') {
+        $query->where('category_id', $searchCategory);
+    }
+
+    $posts = $query->orderBy('id', 'desc')->paginate(12)->withQueryString();
+
+    // ৪. ক্যাটাগরি লিস্ট (ড্রপডাউনের জন্য)
+    $categories = Category::where('status', 1)->select('id', 'name')->get();
+
+    // ৫. সাইডবার: মাসের আর্কাইভ (Monthly Archive Count)
+    // এটি গত ৬ মাসের ডাটা দেখাবে
+    $monthlyArchives = Post::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
+        ->where('status', 'approved')
+        ->where('language', 'bn')
+        ->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->take(6)
+        ->get();
+
+    // ৬. ক্যালেন্ডার লজিক (বর্তমান মাস বা সিলেক্ট করা মাসের জন্য)
+    // যদি ইউজার কোনো ডেট সিলেক্ট করে থাকে, সেই মাসের ক্যালেন্ডার দেখাব, নাহলে চলতি মাসের
+    $currentDate = $searchDate ? Carbon::parse($searchDate) : Carbon::now();
+    
+    $calendarData = [
+        'year' => $currentDate->year,
+        'month' => $currentDate->month,
+        'monthName' => $currentDate->format('F Y'), // English Month Name needed for Carbon logic
+        'banglaMonth' => $currentDate->locale('bn')->isoFormat('MMMM YYYY'), // For Display
+        'daysInMonth' => $currentDate->daysInMonth,
+        'startDayOfWeek' => Carbon::createFromDate($currentDate->year, $currentDate->month, 1)->dayOfWeek, // 0=Sunday, 6=Saturday
+    ];
+
+    return view('front.archive', compact(
+        'posts', 
+        'categories', 
+        'monthlyArchives', 
+        'calendarData', 
+        'searchDate', 
+        'searchCategory'
+    ));
+}
+
+
+   public function privacyPolicy()
+    {
+        // ডাটাবেজ থেকে প্রথম রো (row) টি আনছি
+        $data = ExtraPage::first();
+        return view('front.privacy_policy', compact('data'));
+    }
+
+    public function termsCondition()
+    {
+        $data = ExtraPage::first();
+        return view('front.terms_condition', compact('data'));
+    }
+
+    // Contact Us Form Submission
+    public function contactUsPost(Request $request)
+    {
+        // ১. ভ্যালিডেশন
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:100',
+            'phone' => 'nullable|string|max:20', // ফোন অপশনাল রাখা হয়েছে
+            'subject' => 'required|string|max:200',
+            'message' => 'required|string|max:2000', // 'message' ইনপুট থেকে আসবে
+        ]);
+
+        // ২. ডাটা সেভ করা
+        Message::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject,
+            'msg' => $request->message, // ডাটাবেজে কলামের নাম 'msg'
+        ]);
+
+        // ৩. সাকসেস মেসেজ রিটার্ন
+        // সুইট অ্যালার্ট বা সাধারণ সেশন মেসেজ ব্যবহার করতে পারেন
+        return back()->with('success', 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে! শীঘ্রই আমরা যোগাযোগ করব।');
+    }
 
 
 }

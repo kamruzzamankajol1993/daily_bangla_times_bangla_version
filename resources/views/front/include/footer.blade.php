@@ -125,20 +125,24 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('front.team') }}">
                                 <i class="fas fa-chevron-right"></i> Team
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('front.termsCondition') }}">
                                 <i class="fas fa-chevron-right"></i> Terms And Condition
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('front.privacyPolicy') }}">
                                 <i class="fas fa-chevron-right"></i> Privacy Policy
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('front.archive') }}">
+                                <i class="fas fa-chevron-right"></i> Archive
+                            </a>
                     </ul>
                 </div>
 
