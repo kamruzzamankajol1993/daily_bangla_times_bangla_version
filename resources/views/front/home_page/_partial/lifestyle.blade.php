@@ -21,7 +21,7 @@
                             </div>
                             <div class="card-body px-0 pb-2">
                                 <h6 class="fw-bold m-0 lh-base">
-                                    <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                    <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $news->title }}
                                     </a>
                                 </h6>
@@ -45,7 +45,7 @@
                             </div>
                             <div class="card-body px-0 pb-2">
                                 <h6 class="fw-bold m-0 lh-base small">
-                                    <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                    <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $news->title }}
                                     </a>
                                 </h6>

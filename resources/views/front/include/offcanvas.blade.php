@@ -31,12 +31,12 @@
                             </div>
                             <div id="mobileMenu{{ $category->id }}" class="collapse bg-light">
                                 {{-- প্যারেন্ট লিংক --}}
-                                <a href="{{ route('front.category.products', $category->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small fw-bold">
+                                <a href="{{ route('front.category.news', $category->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small fw-bold">
                                     <i class="fas fa-angle-right me-1"></i> {{ $category->name }} (All)
                                 </a>
                                 {{-- চাইল্ড লুপ --}}
                                 @foreach($category->children as $child)
-                                    <a href="{{ route('front.category.products', $child->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small">
+                                    <a href="{{ route('front.category.news', $child->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small">
                                         <i class="fas fa-angle-right me-1"></i> {{ $child->name }}
                                     </a>
                                 @endforeach
@@ -44,7 +44,7 @@
                         </div>
                     @else
                         {{-- সাব-ক্যাটাগরি না থাকলে সাধারণ লিংক --}}
-                        <a href="{{ route('front.category.products', $category->slug) }}" class="list-group-item list-group-item-action">
+                        <a href="{{ route('front.category.news', $category->slug) }}" class="list-group-item list-group-item-action">
                             {{ $category->name }}
                         </a>
                     @endif
@@ -64,18 +64,18 @@
                                     <i class="fas fa-chevron-down small text-muted"></i>
                                 </div>
                                 <div id="mobileMenuMore{{ $category->id }}" class="collapse bg-light">
-                                    <a href="{{ route('front.category.products', $category->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small fw-bold">
+                                    <a href="{{ route('front.category.news', $category->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small fw-bold">
                                         <i class="fas fa-angle-right me-1"></i> {{ $category->name }} (All)
                                     </a>
                                     @foreach($category->children as $child)
-                                        <a href="{{ route('front.category.products', $child->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small">
+                                        <a href="{{ route('front.category.news', $child->slug) }}" class="list-group-item list-group-item-action ps-4 border-0 small">
                                             <i class="fas fa-angle-right me-1"></i> {{ $child->name }}
                                         </a>
                                     @endforeach
                                 </div>
                             </div>
                         @else
-                            <a href="{{ route('front.category.products', $category->slug) }}" class="list-group-item list-group-item-action">
+                            <a href="{{ route('front.category.news', $category->slug) }}" class="list-group-item list-group-item-action">
                                 {{ $category->name }}
                             </a>
                         @endif

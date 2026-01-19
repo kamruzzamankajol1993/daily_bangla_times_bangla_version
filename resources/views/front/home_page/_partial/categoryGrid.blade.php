@@ -23,7 +23,7 @@
                         </div>
                         <div class="card-body p-3">
                             <h5 class="card-title fw-bold hover-red">
-                                <a href="{{ route('front.product.details', $mainNational->slug) }}" class="text-dark text-decoration-none hover-red">
+                                <a href="{{ route('front.news.details', $mainNational->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainNational->title }}
                                 </a>
                             </h5>
@@ -42,7 +42,7 @@
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
-                                        <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                        <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
                                     </h6>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="card-body p-3">
                             <h5 class="card-title fw-bold hover-red">
-                                <a href="{{ route('front.product.details', $mainPolitics->slug) }}" class="text-dark text-decoration-none hover-red">
+                                <a href="{{ route('front.news.details', $mainPolitics->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainPolitics->title }}
                                 </a>
                             </h5>
@@ -93,7 +93,7 @@
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
-                                        <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                        <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
                                     </h6>
@@ -125,7 +125,7 @@
                         </div>
                         <div class="card-body p-3">
                             <h5 class="card-title fw-bold hover-red">
-                                <a href="{{ route('front.product.details', $mainEconomy->slug) }}" class="text-dark text-decoration-none hover-red">
+                                <a href="{{ route('front.news.details', $mainEconomy->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainEconomy->title }}
                                 </a>
                             </h5>
@@ -144,7 +144,7 @@
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
-                                        <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                        <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
                                     </h6>

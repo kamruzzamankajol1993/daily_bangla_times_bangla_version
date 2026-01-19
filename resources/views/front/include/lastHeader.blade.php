@@ -23,7 +23,7 @@
             <ul class="dropdown-menu border-0 shadow rounded-0" aria-labelledby="navbarDropdown{{ $category->id }}">
                 {{-- এখানে প্যারেন্ট ক্যাটাগরি নিজেও একটি অপশন হিসেবে রাখা ভালো (অপশনাল) --}}
                 <li>
-                    <a class="dropdown-item fw-bold" href="{{ route('front.category.products', $category->slug) }}">
+                    <a class="dropdown-item fw-bold" href="{{ route('front.category.news', $category->slug) }}">
                         {{ $category->name }} (All)
                     </a>
                 </li>
@@ -31,7 +31,7 @@
                 {{-- চাইল্ড ক্যাটাগরি লুপ --}}
                 @foreach($category->children as $child)
                     <li>
-                        <a class="dropdown-item" href="{{ route('front.category.products', $child->slug) }}">
+                        <a class="dropdown-item" href="{{ route('front.category.news', $child->slug) }}">
                             {{ $child->name }}
                         </a>
                     </li>
@@ -41,7 +41,7 @@
     @else
         {{-- যদি চাইল্ড না থাকে তবে সাধারণ লিংক হবে --}}
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('front.category.products', $category->slug) }}">
+            <a class="nav-link" href="{{ route('front.category.news', $category->slug) }}">
                 {{ $category->name }}
             </a>
         </li>
@@ -58,7 +58,7 @@
                             {{-- পরবর্তী ১০টি ক্যাটাগরি --}}
                             @foreach($more_categories as $moreCategory)
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('front.category.products', $moreCategory->slug) }}">
+                                    <a class="dropdown-item" href="{{ route('front.category.news', $moreCategory->slug) }}">
                                         {{ $moreCategory->name }}
                                     </a>
                                 </li>

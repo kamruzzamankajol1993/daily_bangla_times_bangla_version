@@ -104,8 +104,8 @@
                              style="filter: drop-shadow(0px 0px 1px #fff);">
                     </a>
                     <div class="d-flex justify-content-center gap-2">
-                        <a href="#" class="btn btn-sm text-white fw-bold rounded-1 text-decoration-none" style="background-color: #00d27a;">বাংলা</a>
-                        <a href="#" class="btn btn-sm text-white fw-bold rounded-1 text-decoration-none" style="background-color: #00d27a;">English</a>
+                        <a href="{{$front_front_url}}" target="_blank" class="btn btn-sm text-white fw-bold rounded-1 text-decoration-none" style="background-color: #00d27a;">বাংলা</a>
+                        <a href="{{$front_english_url}}" target="_blank" class="btn btn-sm text-white fw-bold rounded-1 text-decoration-none" style="background-color: #00d27a;">English</a>
                     </div>
                 </div>
 

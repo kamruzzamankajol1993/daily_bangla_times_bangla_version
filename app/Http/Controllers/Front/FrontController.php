@@ -17,6 +17,8 @@ use App\Models\SystemInformation;
 use App\Models\Message; // Make sure to import the Message model
 use Illuminate\Support\Facades\Validator;
 use App\Models\VideoNews;
+use App\Models\Reaction;
+use App\Models\Comment;
 class FrontController extends Controller
 {
 
@@ -290,7 +292,7 @@ class FrontController extends Controller
                         ->take(7)
                         ->get();
 
-     if ($miscNews->count() == 0) {
+     if ($lifestyleNews->count() == 0) {
         $lifestyleNews = Post::where('status', 'approved')
                             ->where('draft_status', 0)
                             ->where('trash_status', 0)
@@ -329,6 +331,20 @@ class FrontController extends Controller
                         ->take(7)
                         ->get();
 
+                        if ($photoGalleryNews->count() == 0) {
+        $photoGalleryNews = Post::where('status', 'approved')
+                            ->where('draft_status', 0)
+                            ->where('trash_status', 0)
+                            ->where('language', 'bn')
+                            // categories রিলেশনশিপ ব্যবহার করে post_category টেবিল চেক করা হচ্ছে
+                            ->whereHas('categories', function ($query) {
+                                $query->where('categories.id', 137); // Category ID
+                            })
+                            ->orderBy('id', 'desc')
+                            ->take(5)
+                            ->get();
+    }
+
     $videoGalleryNews = VideoNews::where('status', 'approved')
                         ->where('draft_status', 0)
                         ->where('trash_status', 0)
@@ -336,6 +352,48 @@ class FrontController extends Controller
                          ->where('language', 'bn') 
                         ->orderBy('id', 'desc')
                         ->take(9)
+                        ->get();
+
+    $socialMediaNews = Post::where('status', 'approved')
+                        ->where('draft_status', 0)
+                        ->where('trash_status', 0)
+                        ->where('language', 'bn')
+                        ->where('category_id', 125) // <--- সঠিক ID দিন
+                        ->orderBy('id', 'desc')
+                        ->take(5)
+                        ->get();
+
+    // ৩০. ব্যবসা বানিজ্য (Business) - ৫টি
+    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
+    $businessNews = Post::where('status', 'approved')
+                        ->where('draft_status', 0)
+                        ->where('trash_status', 0)
+                        ->where('language', 'bn')
+                        ->where('category_id', 134) // <--- সঠিক ID দিন
+                        ->orderBy('id', 'desc')
+                        ->take(5)
+                        ->get();
+
+    // ৩১. ধর্ম ও জীবন (Religion & Life) - ৫টি
+    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
+    $religionLifeNews = Post::where('status', 'approved')
+                        ->where('draft_status', 0)
+                        ->where('trash_status', 0)
+                        ->where('language', 'bn')
+                        ->where('category_id', 136) // <--- সঠিক ID দিন
+                        ->orderBy('id', 'desc')
+                        ->take(5)
+                        ->get();
+
+    // ৩২. বিজ্ঞান ও প্রযুক্তি (Science & Technology) - ৫টি
+    // [নোট: 'category_id' এর জায়গায় আপনার সঠিক ID বসান]
+    $sciTechNews = Post::where('status', 'approved')
+                        ->where('draft_status', 0)
+                        ->where('trash_status', 0)
+                        ->where('language', 'bn')
+                        ->where('category_id', 116) // <--- সঠিক ID দিন
+                        ->orderBy('id', 'desc')
+                        ->take(5)
                         ->get();
     return view('front.home_page.index',
      compact(
@@ -366,9 +424,138 @@ class FrontController extends Controller
         'saradeshNews',
         'divisions',
         'photoGalleryNews',
-        'videoGalleryNews'
+        'videoGalleryNews',
+        'socialMediaNews',
+        'businessNews',
+        'religionLifeNews',
+        'sciTechNews'
 
          ));
+}
+
+
+public function newsList(Request $request, $slug)
+{
+    // 1. Find the Category by slug
+    $category = Category::where('slug', $slug)->firstOrFail();
+
+    // 2. Fetch Posts for this Category with Pagination
+    // We use whereHas because we are querying from the Post model perspective to ensure global scopes (trash/draft) apply correctly.
+    $posts = Post::whereHas('categories', function($q) use ($category) {
+                    $q->where('categories.id', $category->id);
+                })
+                ->where('status', 'approved')
+                ->where('draft_status', 0)
+                ->where('trash_status', 0)
+                ->orderBy('id', 'desc')
+                ->paginate(12); // Grid layout, usually multiples of 3 or 4 are best
+
+    // 3. Check if it's an AJAX request (Pagination Click)
+    if ($request->ajax()) {
+        // Only render the partial view with the new page's data
+        return view('front.news._category_posts_partial', compact('posts'))->render();
+    }
+
+    // 4. Normal Page Load
+    return view('front.news.list', compact('category', 'posts', 'slug'));
+}
+
+public function newsDetails($slug)
+{
+    // 1. Fetch Post with necessary relationships
+    $post = Post::with([
+        'author.designation', 
+        'categories', // Load categories for breadcrumb
+        'comments' => function($q) {
+            $q->where('status', 1)
+              ->whereNull('parent_id')
+              ->with(['replies' => function($r) {
+                  $r->where('status', 1);
+              }]);
+        }
+    ])
+    ->withCount([
+        'reactions as like_count' => function ($q) { $q->where('type', 'like'); },
+        'reactions as love_count' => function ($q) { $q->where('type', 'love'); },
+        'reactions as haha_count' => function ($q) { $q->where('type', 'haha'); },
+        'reactions as sad_count' => function ($q) { $q->where('type', 'sad'); },
+        'reactions as angry_count' => function ($q) { $q->where('type', 'angry'); }
+    ])
+    ->where('slug', $slug)
+    ->firstOrFail();
+
+    // 2. Increment View Count
+    $post->increment('view_count');
+
+    // 3. Fetch Previous and Next Posts
+    $previousPost = Post::where('id', '<', $post->id)
+                        ->where('status', 'approved')
+                        ->where('draft_status', 0)
+                        ->where('trash_status', 0)
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+    $nextPost = Post::where('id', '>', $post->id)
+                    ->where('status', 'approved')
+                    ->where('draft_status', 0)
+                    ->where('trash_status', 0)
+                    ->orderBy('id', 'asc')
+                    ->first();
+
+    // 4. Sidebar Data
+    $latestNews = Post::where('status', 'approved')->where('trash_status', 0)->latest()->take(5)->get();
+    $popularNews = Post::where('status', 'approved')->where('trash_status', 0)->orderBy('view_count', 'desc')->take(5)->get();
+
+    return view('front.news.details', compact('post', 'previousPost', 'nextPost', 'latestNews', 'popularNews'));
+}
+
+// Store Comment (Guest)
+public function storeComment(Request $request)
+{
+    $request->validate([
+        'post_id' => 'required|exists:posts,id',
+        'name' => 'required|string|max:100',
+        'body' => 'required|string|max:1000',
+        'parent_id' => 'nullable|exists:comments,id'
+    ]);
+
+    Comment::create([
+        'post_id' => $request->post_id,
+        'name' => $request->name,
+        'body' => $request->body,
+        'parent_id' => $request->parent_id,
+        'status' => 0 // Default Pending
+    ]);
+
+    return back()->with('success', 'আপনার মন্তব্য গ্রহণ করা হয়েছে। এডমিন অনুমোদনের পর এটি প্রকাশিত হবে।');
+}
+
+// Store Reaction (AJAX)
+public function storeReaction(Request $request)
+{
+    $request->validate([
+        'post_id' => 'required|exists:posts,id',
+        'type' => 'required|in:like,love,haha,sad,angry'
+    ]);
+
+    // Check if IP already reacted to this post
+    $existing = Reaction::where('post_id', $request->post_id)
+                        ->where('ip_address', $request->ip())
+                        ->first();
+
+    if ($existing) {
+        // Update existing reaction
+        $existing->update(['type' => $request->type]);
+    } else {
+        // Create new
+        Reaction::create([
+            'post_id' => $request->post_id,
+            'ip_address' => $request->ip(),
+            'type' => $request->type
+        ]);
+    }
+
+    return response()->json(['message' => 'Reaction Saved']);
 }
 
 

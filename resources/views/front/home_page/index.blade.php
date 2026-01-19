@@ -48,7 +48,7 @@
                     @endif
                     
                     {{-- টাইটেল লিংক --}}
-                    <a href="{{ route('front.product.details', $news->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
+                    <a href="{{ route('front.news.details', $news->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
                         {{ $news->title }}
                     </a>
                 </div>
@@ -83,7 +83,7 @@
                     {{-- ক্যাপশন --}}
                     <div class="carousel-caption d-none d-md-block news-caption-overlay">
                         <h4 class="fw-bold mb-1">
-                            <a href="{{ route('front.product.details', $post->slug) }}" class="text-white text-decoration-none">
+                            <a href="{{ route('front.news.details', $post->slug) }}" class="text-white text-decoration-none">
                                 {{ $post->title }}
                             </a>
                         </h4>
@@ -122,7 +122,7 @@
                         
                         {{-- টাইটেল ও লিংক --}}
                         <h6 class="fw-bold hover-red title-truncate">
-                            <a href="{{ route('front.product.details', $news->slug) }}" class=" hover-red text-dark text-decoration-none">
+                            <a href="{{ route('front.news.details', $news->slug) }}" class=" hover-red text-dark text-decoration-none">
                                 {{ $news->title }}
                             </a>
                         </h6>
@@ -173,7 +173,7 @@
                             @if($post->subtitle)
                                 <div class="news-subtitle">{{ $post->subtitle }}</div>
                             @endif
-                            <a href="{{ route('front.product.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
+                            <a href="{{ route('front.news.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
                                 {{ $post->title }}
                             </a>
                         </div>
@@ -202,7 +202,7 @@
                             @if($post->subtitle)
                                 <div class="news-subtitle">{{ $post->subtitle }}</div>
                             @endif
-                            <a href="{{ route('front.product.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
+                            <a href="{{ route('front.news.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
                                 {{ $post->title }}
                             </a>
                         </div>
@@ -285,6 +285,11 @@
     <!-- sharadesh district section start -->
     @include('front.home_page._partial.sharadeshDistrict')
     <!-- sharadesh district section end -->
+
+
+    <!-- mixed category section start -->
+    @include('front.home_page._partial.mixedCategory')
+    <!-- mixed category section end -->
 
 
     <!-- photo gallery section start -->

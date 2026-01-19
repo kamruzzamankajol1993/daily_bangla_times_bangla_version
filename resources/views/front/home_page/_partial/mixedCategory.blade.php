@@ -1,18 +1,18 @@
-<section class="more-categories-section py-4 bg-light">
+<section class="mixed-category-section py-4 bg-light">
     <div class="container">
         <div class="row g-3">
             
             {{-- লুপ চালানোর সুবিধার্থে একটি অ্যারে তৈরি করা হলো --}}
             @php
-                $sections = [
-                    ['title' => 'শেয়ারবাজার', 'data' => $shareMarketNews ?? collect()],
-                    ['title' => 'জবস',       'data' => $jobsNews ?? collect()],
-                    ['title' => 'কৃষি',       'data' => $agricultureNews ?? collect()],
-                    ['title' => 'বিবিধ',      'data' => $miscNews ?? collect()],
+                $mixedSections = [
+                    ['title' => 'সোশ্যাল মিডিয়া',    'data' => $socialMediaNews ?? collect()],
+                    ['title' => 'ব্যবসা বানিজ্য',     'data' => $businessNews ?? collect()],
+                    ['title' => 'ধর্ম ও জীবন',        'data' => $religionLifeNews ?? collect()],
+                    ['title' => 'বিজ্ঞান ও প্রযুক্তি', 'data' => $sciTechNews ?? collect()],
                 ];
             @endphp
 
-            @foreach($sections as $section)
+            @foreach($mixedSections as $section)
                 <div class="col-lg-3 col-md-6">
                     {{-- Header --}}
                     <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">

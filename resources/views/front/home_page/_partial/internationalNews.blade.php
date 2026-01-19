@@ -23,13 +23,13 @@
                                     <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
                                 </div>
                                 <h3 class="fw-bold mb-3 hover-red" style="line-height: 1.4;">
-                                    <a href="{{ route('front.product.details', $mainNews->slug) }}" class="text-dark text-decoration-none hover-red">
+                                    <a href="{{ route('front.news.details', $mainNews->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $mainNews->title }}
                                     </a>
                                 </h3>
                                 <p class="text-secondary text-justify flex-grow-1">
                                     {{ Str::limit(strip_tags($mainNews->content), 250) }}
-                                    <a href="{{ route('front.product.details', $mainNews->slug) }}" class="text-danger fw-bold text-decoration-none">বিস্তারিত</a>
+                                    <a href="{{ route('front.news.details', $mainNews->slug) }}" class="text-danger fw-bold text-decoration-none">বিস্তারিত</a>
                                 </p>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                                                  width="100" height="70"
                                                  style="object-fit: cover;">
                                             <h6 class="fw-bold m-0 lh-sm small">
-                                                <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                                <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                                     {{ $news->title }}
                                                 </a>
                                             </h6>
@@ -98,7 +98,7 @@
                                                     <small class="text-danger fw-bold d-block mb-1">{{ $news->subtitle }}</small>
                                                 @endif
                                                 <h6 class="card-title fs-6 m-0 lh-sm">
-                                                    <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
+                                                    <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                                         {{ $news->title }}
                                                     </a>
                                                 </h6>

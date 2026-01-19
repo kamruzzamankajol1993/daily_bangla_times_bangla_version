@@ -21,7 +21,7 @@
                             </div>
                             <div class="card-body px-0 pt-3">
                                 <h4 class="card-title fw-bold hover-red">
-                                    <a href="{{ route('front.product.details', $mainEnt->slug) }}" class="text-dark text-decoration-none hover-red">
+                                    <a href="{{ route('front.news.details', $mainEnt->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $mainEnt->title }}
                                     </a>
                                 </h4>
@@ -48,7 +48,7 @@
                                         <div class="card-img-overlay d-flex align-items-end p-0">
                                             <div class="overlay-text p-2 w-100">
                                                 <h6 class="fw-bold m-0 lh-base">
-                                                    <a href="{{ route('front.product.details', $news->slug) }}" class="text-white text-decoration-none">
+                                                    <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                         {{ $news->title }}
                                                     </a>
                                                 </h6>
@@ -76,7 +76,7 @@
                                 <div class="card-img-overlay d-flex align-items-end p-0">
                                     <div class="overlay-text p-2 w-100">
                                         <h6 class="fw-bold m-0 small lh-base">
-                                            <a href="{{ route('front.product.details', $news->slug) }}" class="text-white text-decoration-none">
+                                            <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                 {{ $news->title }}
                                             </a>
                                         </h6>

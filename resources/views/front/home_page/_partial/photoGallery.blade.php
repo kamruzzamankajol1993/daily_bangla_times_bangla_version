@@ -38,7 +38,7 @@
                                         
                                         <div class="carousel-caption d-block text-start p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); bottom: 0; left: 0; right: 0;">
                                             <h3 class="fw-bold m-0 lh-sm">
-                                                <a href="{{ route('front.product.details', $news->slug) }}" class="text-white text-decoration-none">
+                                                <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                     {{ $news->title }}
                                                 </a>
                                             </h3>
@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="card-body px-0 py-2">
                                         <h6 class="fw-bold m-0 hover-red small lh-sm">
-                                            <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none">
+                                            <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none">
                                                 {{ Str::limit($news->title, 50) }}
                                             </a>
                                         </h6>

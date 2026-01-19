@@ -9,7 +9,7 @@
                 
                 @if(isset($breakingNews) && count($breakingNews) > 0)
                     @foreach($breakingNews as $news)
-                        <a href="{{ route('front.product.details', $news->slug) }}" class="ticker-item me-5 d-inline-flex align-items-center text-white text-decoration-none">
+                        <a href="{{ route('front.news.details', $news->slug) }}" class="ticker-item me-5 d-inline-flex align-items-center text-white text-decoration-none">
                             
                             {{-- ইমেজ লজিক: ইমেজ থাকলে দেখাবে, না থাকলে প্লেসহোল্ডার --}}
                             @php

@@ -29,7 +29,7 @@
                                     <div class="news-subtitle">{{ $sport1->subtitle }}</div>
                                 @endif
                                 <h5 class="card-title fw-bold hover-red">
-                                    <a href="{{ route('front.product.details', $sport1->slug) }}" class="hover-red text-dark text-decoration-none">
+                                    <a href="{{ route('front.news.details', $sport1->slug) }}" class="hover-red text-dark text-decoration-none">
                                         {{ $sport1->title }}
                                     </a>
                                 </h5>
@@ -53,7 +53,7 @@
                                                 <div class="news-subtitle" style="font-size: 11px;">{{ $news->subtitle }}</div>
                                             @endif
                                             <h6 class="fw-bold m-0 hover-red small lh-base">
-                                                <a href="{{ route('front.product.details', $news->slug) }}" class="hover-red text-dark text-decoration-none">
+                                                <a href="{{ route('front.news.details', $news->slug) }}" class="hover-red text-dark text-decoration-none">
                                                     {{ $news->title }}
                                                 </a>
                                             </h6>
@@ -85,7 +85,7 @@
                                     <div class="news-subtitle">{{ $sport2->subtitle }}</div>
                                 @endif
                                 <h5 class="card-title fw-bold hover-red">
-                                    <a href="{{ route('front.product.details', $sport2->slug) }}" class="hover-red text-dark text-decoration-none">
+                                    <a href="{{ route('front.news.details', $sport2->slug) }}" class="hover-red text-dark text-decoration-none">
                                         {{ $sport2->title }}
                                     </a>
                                 </h5>
@@ -109,7 +109,7 @@
                                                 <div class="news-subtitle" style="font-size: 11px;">{{ $news->subtitle }}</div>
                                             @endif
                                             <h6 class="fw-bold m-0 hover-red small lh-base">
-                                                <a href="{{ route('front.product.details', $news->slug) }}" class="hover-red text-dark text-decoration-none">
+                                                <a href="{{ route('front.news.details', $news->slug) }}" class="hover-red text-dark text-decoration-none">
                                                     {{ $news->title }}
                                                 </a>
                                             </h6>
@@ -132,7 +132,7 @@
                                             <div class="news-subtitle" style="font-size: 11px;">{{ $news->subtitle }}</div>
                                         @endif
                                         <h6 class="fw-bold m-0 hover-red small lh-base">
-                                            <a href="{{ route('front.product.details', $news->slug) }}" class="hover-redtext-dark text-decoration-none">
+                                            <a href="{{ route('front.news.details', $news->slug) }}" class="hover-redtext-dark text-decoration-none">
                                                 {{ $news->title }}
                                             </a>
                                         </h6>

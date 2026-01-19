@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-body px-0 pt-3 pb-2">
                             <h4 class="card-title fw-bold hover-red">
-                                <a href="{{ route('front.product.details', $mainSaradesh->slug) }}" class="text-dark text-decoration-none">
+                                <a href="{{ route('front.news.details', $mainSaradesh->slug) }}" class="text-dark text-decoration-none">
                                     {{ $mainSaradesh->title }}
                                 </a>
                             </h4>
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="card-body px-0 pt-2 pb-0">
                                         <h6 class="fw-bold m-0 lh-sm small hover-red">
-                                            <a href="{{ route('front.product.details', $news->slug) }}" class="text-dark text-decoration-none">
+                                            <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none">
                                                 {{ Str::limit($news->title, 40) }}
                                             </a>
                                         </h6>

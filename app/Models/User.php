@@ -63,4 +63,9 @@ class User extends Authenticatable
 {
     return $this->belongsTo(Customer::class);
 }
+
+public function designation()
+{
+    return $this->belongsTo(Designation::class, 'designation_id');
+}
 }
