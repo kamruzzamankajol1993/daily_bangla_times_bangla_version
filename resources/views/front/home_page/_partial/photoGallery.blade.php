@@ -29,7 +29,7 @@
                             @foreach($photoGalleryNews->take(3) as $key => $news)
                                 <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                                     <div class="position-relative">
-                                        <img src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/800x450/333/fff?text=Photo+Gallery' }}" 
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/800x450/333/fff?text=Photo+Gallery' }}" 
                                              class="d-block w-100" 
                                              alt="{{ $news->title }}"
                                              style="height: 450px; object-fit: cover;">
@@ -41,6 +41,7 @@
                                                 <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                     {{ $news->title }}
                                                 </a>
+                                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                             </h3>
                                         </div>
                                     </div>
@@ -57,7 +58,7 @@
                             <div class="col-6">
                                 <div class="card border-0 h-100">
                                     <div class="position-relative">
-                                        <img src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/200x120/555/fff?text=Gallery' }}" 
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/200x120/555/fff?text=Gallery' }}" 
                                              class="card-img-top rounded-0" 
                                              alt="{{ $news->title }}"
                                              style="height: 120px; object-fit: cover;">
@@ -68,6 +69,7 @@
                                             <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none">
                                                 {{ Str::limit($news->title, 50) }}
                                             </a>
+                                            <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                         </h6>
                                     </div>
                                 </div>

@@ -14,7 +14,7 @@
                     {{-- Main Card --}}
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="position-relative">
-                            <img src="{{ $mainLaw->image ? $front_admin_url.$mainLaw->image : 'https://placehold.co/400x250/555/fff?text=Law' }}" 
+                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $mainLaw->image ? $front_admin_url.$mainLaw->image : 'https://placehold.co/400x250/555/fff?text=Law' }}" 
                                  class="card-img-top rounded-0" 
                                  alt="{{ $mainLaw->title }}">
                             <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
@@ -24,6 +24,7 @@
                                 <a href="{{ route('front.news.details', $mainLaw->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainLaw->title }}
                                 </a>
+                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($mainLaw->created_at) }}</small>
                             </h5>
                             <p class="card-text small text-secondary text-justify">
                                 {{ Str::limit(strip_tags($mainLaw->content), 150) }}
@@ -36,13 +37,14 @@
                         @foreach($lawCourtsNews->skip(1) as $news)
                             <div class="card border-0 shadow-sm p-2">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/333/fff?text=News' }}" 
+                                    <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/333/fff?text=News' }}" 
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
                                         <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
+                                        <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                     </h6>
                                 </div>
                             </div>
@@ -65,7 +67,7 @@
                     {{-- Main Card --}}
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="position-relative">
-                            <img src="{{ $mainExclusive->image ? $front_admin_url.$mainExclusive->image : 'https://placehold.co/400x250/222/fff?text=Exclusive' }}" 
+                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $mainExclusive->image ? $front_admin_url.$mainExclusive->image : 'https://placehold.co/400x250/222/fff?text=Exclusive' }}" 
                                  class="card-img-top rounded-0" 
                                  alt="{{ $mainExclusive->title }}">
                             <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
@@ -75,6 +77,7 @@
                                 <a href="{{ route('front.news.details', $mainExclusive->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainExclusive->title }}
                                 </a>
+                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($mainExclusive->created_at) }}</small>
                             </h5>
                             <p class="card-text small text-secondary text-justify">
                                 {{ Str::limit(strip_tags($mainExclusive->content), 150) }}
@@ -87,13 +90,14 @@
                         @foreach($exclusiveNews->skip(1) as $news)
                             <div class="card border-0 shadow-sm p-2">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/777/fff?text=News' }}" 
+                                    <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/777/fff?text=News' }}" 
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
                                         <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
+                                        <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                     </h6>
                                 </div>
                             </div>
@@ -116,7 +120,7 @@
                     {{-- Main Card --}}
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="position-relative">
-                            <img src="{{ $mainHealth->image ? $front_admin_url.$mainHealth->image : 'https://placehold.co/400x250/000/fff?text=Health' }}" 
+                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $mainHealth->image ? $front_admin_url.$mainHealth->image : 'https://placehold.co/400x250/000/fff?text=Health' }}" 
                                  class="card-img-top rounded-0" 
                                  alt="{{ $mainHealth->title }}">
                             <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
@@ -126,6 +130,7 @@
                                 <a href="{{ route('front.news.details', $mainHealth->slug) }}" class="text-dark text-decoration-none hover-red">
                                     {{ $mainHealth->title }}
                                 </a>
+                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($mainHealth->created_at) }}</small>
                             </h5>
                             <p class="card-text small text-secondary text-justify">
                                 {{ Str::limit(strip_tags($mainHealth->content), 150) }}
@@ -138,13 +143,14 @@
                         @foreach($healthNews->skip(1) as $news)
                             <div class="card border-0 shadow-sm p-2">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/321/fff?text=News' }}" 
+                                    <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/321/fff?text=News' }}" 
                                          class="me-3 rounded-1 flex-shrink-0" 
                                          width="100" height="70" style="object-fit: cover;">
                                     <h6 class="fw-bold m-0 small lh-base">
                                         <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                             {{ $news->title }}
                                         </a>
+                                        <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                     </h6>
                                 </div>
                             </div>

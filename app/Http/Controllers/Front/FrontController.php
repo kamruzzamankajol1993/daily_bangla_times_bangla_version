@@ -21,6 +21,7 @@ use App\Models\Reaction;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ExtraPage;
+use App\Models\PostCategory;
 class FrontController extends Controller
 {
 
@@ -238,7 +239,7 @@ $miscNews         = $this->getCachedPosts('home_misc', 121, 5);
                 // ফটো ও ভিডিও
                 $photoGalleryNews = $this->getCachedPosts('home_photo', 137, 7);
                 $videoGalleryNews = Cache::remember('home_videos', 600, function () {
-                    return VideoNews::select('id', 'title', 'slug', 'thumbnail')->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')->orderBy('id', 'desc')->take(9)->get();
+                    return VideoNews::select('id', 'title', 'slug', 'thumbnail','created_at')->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')->orderBy('id', 'desc')->take(9)->get();
                 });
 
                 // HTML রেন্ডার
@@ -264,6 +265,182 @@ $miscNews         = $this->getCachedPosts('home_misc', 121, 5);
 
 public function newsList(Request $request, $slug)
 {
+
+
+
+// set_time_limit(0);             // 0 মানে ইনফিনিটি টাইম (কখনও টাইমআউট হবে না)
+//     ini_set('memory_limit', '-1');
+
+// ///////////////////
+
+// $currentProcessingPage = 1;
+//     $currentApiPostId = null;
+//     $fixedUserId = 4668; // রিকোয়ারমেন্ট অনুযায়ী ফিক্সড ইউজার আইডি
+
+//     DB::beginTransaction();
+
+//     try {
+//         $page = 1;
+//         $lastPage = 1;
+
+//         do {
+//             $currentProcessingPage = $page;
+            
+//             // API কল
+//             $apiUrl = "https://bangla.dailybanglatimes.com/api/posts-list-api?category_id=16&page={$page}";
+//             $response = Http::get($apiUrl);
+
+//             if ($response->successful()) {
+//                 $jsonData = $response->json();
+//                 $posts = $jsonData['data']['data'] ?? [];
+//                 $lastPage = $jsonData['data']['last_page'] ?? 1;
+
+//                 foreach ($posts as $apiPost) {
+//                     $currentApiPostId = $apiPost['id'];
+
+//                     // ১. ক্যাটাগরি চেক
+//                     $categoryName = $apiPost['category_name'] ?? null;
+//                     $categoryName = $apiPost['category_name'] ?? null;
+//                     $engCategoryName = $apiPost['eng_category_name'] ?? null;
+
+//                     if (!$categoryName) continue;
+
+//                     $localCategory = Category::where('name', $categoryName)->first();
+//                     // যদি ক্যাটাগরি না থাকে -> নতুন তৈরি করবে
+//                     if (!$localCategory) {
+//                         $localCategory = Category::create([
+//                             'name'      => $categoryName,
+//                             'eng_name'  => $engCategoryName ?? Str::slug($categoryName), // ইংরেজি নাম না থাকলে স্লাগ বসবে
+//                             'slug'      => Str::slug($categoryName), // আপনার মডেলে অটো স্লাগ আছে, তবুও সেফটির জন্য দেওয়া হলো
+//                             'status'    => 1, // ডিফল্ট অ্যাক্টিভ
+//                             'parent_id' => 0, // মেইন ক্যাটাগরি হিসেবে সেট হবে
+//                             'order_id'  => 0,
+//                         ]);
+//                     }
+
+//                     $categoryId = $localCategory->id;
+
+//                     // ২. ডাটা প্রিপারেশন (ম্যাপিং লজিক)
+                    
+//                     // Language Logic: public_site 1 ? bn : en
+//                     $language = (isset($apiPost['public_site']) && $apiPost['public_site'] == 1) ? 'bn' : 'en';
+
+//                     // Date Parsing
+//                     // যদি created_at না থাকে তবে বর্তমান সময় নিবে
+//                     $apiCreatedAt = isset($apiPost['created_at']) 
+//                                     ? Carbon::parse($apiPost['created_at']) 
+//                                     : Carbon::now('Asia/Dhaka');
+                    
+//                     // যদি updated_at null থাকে, তবে created_at এর সময়টাই নিবে
+//                     $apiUpdatedAt = !empty($apiPost['updated_at']) 
+//                                     ? Carbon::parse($apiPost['updated_at']) 
+//                                     : $apiCreatedAt;
+
+//                     // ৩. পোস্ট চেক (টাইটেল দিয়ে)
+//                     $existingPost = Post::withoutGlobalScope('active')
+//                                         ->where('title', $apiPost['title'])
+//                                         ->first();
+
+//                     // কমন ডাটা অ্যারে (Create এবং Update উভয়ের জন্য)
+//                     $postData = [
+//                         'category_id'       => $categoryId,
+//                         'updated_at'        => $apiPost['updated_at'] ? Carbon::parse($apiPost['updated_at']) : $apiCreatedAt,
+//                         'created_at'        => $apiPost['created_at'] ? Carbon::parse($apiPost['created_at']) : $apiCreatedAt,
+//                         'bangladesh_time'   => $apiCreatedAt,
+//                     ];
+
+//                     if ($existingPost) {
+
+//                     $existingPost->timestamps = false;
+//                         // --- UPDATE SCENARIO ---
+//                         $existingPost->update($postData);
+
+//                         // পিভট টেবিল রিসেট
+//                         PostCategory::where('post_id', $existingPost->id)->delete();
+//                         PostCategory::create([
+//                             'post_id'     => $existingPost->id,
+//                             'category_id' => $categoryId
+//                         ]);
+
+//                     } else {
+
+// $baseSlug = Str::slug($apiPost['title']);
+// $uniqueSlug = $baseSlug;
+//                         $counter = 1;
+
+//                         // লুপ চালিয়ে চেক করা হবে স্লাগটি ডাটাবেসে আছে কিনা (Soft delete সহ চেক করা হবে)
+//                         while (Post::withoutGlobalScopes()->where('slug', $uniqueSlug)->exists()) {
+//                             $uniqueSlug = $baseSlug . '-' . $counter;
+//                             $counter++;
+//                         }
+//                     $postDataOne = [
+//                         'category_id'       => $categoryId,
+//                         'old_id'          => $apiPost['id'],
+//                         'subtitle'          => $apiPost['op_title'],      // op_title is subtitle
+//                         'content'           => $apiPost['paragraph'],     // paragraph is content
+//                         'image'             => $apiPost['cover_image'],   // cover_image is image
+//                         'facebook_image'    => $apiPost['cover_image1'],  // cover_image1 is facebook_image
+//                         'image_caption'     => $apiPost['caption'],       // caption
+//                         'source'            => 'ডেইলি বাংলা টাইমস',      // source fixed
+//                         'language'          => $language,                 // bn or en
+//                         'view_count'        => $apiPost['total_share'] ?? 0, // total_share is view count
+//                         'slug'              => $uniqueSlug,
+//                         'updated_at'        => $apiPost['updated_at'] ? Carbon::parse($apiPost['updated_at']) : $apiCreatedAt,
+//                         'created_at'        => $apiPost['created_at'] ? Carbon::parse($apiPost['created_at']) : $apiCreatedAt,
+//                         'bangladesh_time'   => $apiCreatedAt,
+//                     ];
+                    
+//                         // --- INSERT SCENARIO ---
+//                         // Create এর জন্য অতিরিক্ত ফিল্ড যোগ করা হচ্ছে
+//                         $createData = array_merge($postDataOne, [
+//                             'title'         => $apiPost['title'],
+//                             'user_id'       => $fixedUserId, // 4668 always
+//                             'status'        => 1,            // Approved
+//                             'trash_status'  => 0,
+//                             'draft_status'  => 0,
+//                         ]);
+// $newPost = new Post();
+//     $newPost->timestamps = false;
+//                         $newPost = Post::create($createData);
+
+//                         // পিভট টেবিলে এন্ট্রি
+//                         PostCategory::create([
+//                             'post_id'     => $newPost->id,
+//                             'category_id' => $categoryId
+//                         ]);
+//                     }
+//                 }
+//             } else {
+//                 throw new \Exception("Failed to fetch data from API URL");
+//             }
+
+//             $page++;
+
+//         } while ($page <= $lastPage);
+
+//         DB::commit();
+
+//         return response()->json([
+//             'status' => true,
+//             'message' => 'All posts synced successfully with new mapping.'
+//         ]);
+
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+
+//         return response()->json([
+//             'status' => false,
+//             'message' => 'Error occurred during sync',
+//             'error_detail' => $e->getMessage(),
+//             'failed_at' => [
+//                 'page_number' => $currentProcessingPage,
+//                 'api_post_id' => $currentApiPostId
+//             ]
+//         ], 500);
+//     }
+
+
+///////////////////////////
     // 1. Find the Category by slug
     $category = Category::where('slug', $slug)->firstOrFail();
 
@@ -289,9 +466,66 @@ public function newsList(Request $request, $slug)
     return view('front.news.list', compact('category', 'posts', 'slug'));
 }
 
+
+
+public function newsDetailsOld($id)
+{
+    
+
+     // 1. Fetch Post with necessary relationships
+    $post = Post::with([
+        'author.designation', 
+        'categories', // Load categories for breadcrumb
+        'comments' => function($q) {
+            $q->where('status', 1)
+              ->whereNull('parent_id')
+              ->with(['replies' => function($r) {
+                  $r->where('status', 1);
+              }]);
+        }
+    ])
+    ->withCount([
+        'reactions as like_count' => function ($q) { $q->where('type', 'like'); },
+        'reactions as love_count' => function ($q) { $q->where('type', 'love'); },
+        'reactions as haha_count' => function ($q) { $q->where('type', 'haha'); },
+        'reactions as sad_count' => function ($q) { $q->where('type', 'sad'); },
+        'reactions as angry_count' => function ($q) { $q->where('type', 'angry'); }
+    ])
+           ->where('language', 'bn')
+    ->where('old_id', $id)
+    ->firstOrFail();
+//dd('ok');
+    // 2. Increment View Count
+    $post->increment('view_count');
+
+    // 3. Fetch Previous and Next Posts
+    $previousPost = Post::where('id', '<', $post->id)
+                        ->where('status', 'approved')
+                        ->where('draft_status', 0)
+                               ->where('language', 'bn')
+                        ->where('trash_status', 0)
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+    $nextPost = Post::where('id', '>', $post->id)
+                    ->where('status', 'approved')
+                    ->where('draft_status', 0)
+                    ->where('trash_status', 0)
+                           ->where('language', 'bn')
+                    ->orderBy('id', 'asc')
+                    ->first();
+
+    // 4. Sidebar Data
+    $latestNews = Post::where('status', 'approved')       ->where('language', 'bn')->where('trash_status', 0)->latest()->take(5)->get();
+    $popularNews = Post::where('status', 'approved')->where('language', 'bn')->where('trash_status', 0)->orderBy('view_count', 'desc')->take(5)->get();
+}
+
 public function newsDetails($slug)
 {
-    // 1. Fetch Post with necessary relationships
+
+
+
+     // 1. Fetch Post with necessary relationships
     $post = Post::with([
         'author.designation', 
         'categories', // Load categories for breadcrumb
@@ -313,7 +547,7 @@ public function newsDetails($slug)
            ->where('language', 'bn')
     ->where('slug', $slug)
     ->firstOrFail();
-
+//dd('ok');
     // 2. Increment View Count
     $post->increment('view_count');
 
@@ -339,6 +573,7 @@ public function newsDetails($slug)
     $popularNews = Post::where('status', 'approved')->where('language', 'bn')->where('trash_status', 0)->orderBy('view_count', 'desc')->take(5)->get();
 
     return view('front.news.details', compact('post', 'previousPost', 'nextPost', 'latestNews', 'popularNews'));
+   
 }
 
 // Store Comment (Guest)
@@ -411,7 +646,7 @@ public function videoDetail($slug)
     // রিলেটেড বা অন্যান্য ভিডিও
     $relatedVideos = VideoNews::where('slug', '!=', $slug)
                         ->where('status', 'approved')
-
+->where('language', 'bn')
                         ->where('draft_status', 0)
                         ->where('trash_status', 0)
                         ->orderBy('id', 'desc')
@@ -419,6 +654,26 @@ public function videoDetail($slug)
                         ->get();
 
     return view('front.video_gallery.detail', compact('video', 'relatedVideos'));
+}
+
+
+public function videoList(Request $request)
+{
+    // ১. ভিডিও ডাটা আনা (প্যাজিনেশন সহ)
+    $videos = VideoNews::where('status', 'approved')
+                ->where('draft_status', 0)
+                          ->where('language', 'bn') 
+                ->where('trash_status', 0)
+                ->orderBy('id', 'desc')
+                ->paginate(12); // প্রতি পেজে ১২টি ভিডিও
+
+    // ২. AJAX রিকোয়েস্ট চেক (প্যাজিনেশনের জন্য)
+    if ($request->ajax()) {
+        return view('front.video_gallery._video_list_partial', compact('videos'))->render();
+    }
+
+    // ৩. ভিউ লোড করা
+    return view('front.video_gallery.list', compact('videos'));
 }
 
 

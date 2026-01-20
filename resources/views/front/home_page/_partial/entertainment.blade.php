@@ -14,7 +14,7 @@
                     @if($mainEnt)
                         <div class="card border-0 h-100 bg-transparent">
                             <div class="position-relative">
-                                <img src="{{ $mainEnt->image ? $front_admin_url.$mainEnt->image : 'https://placehold.co/600x380/333/fff?text=Entertainment' }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $mainEnt->image ? $front_admin_url.$mainEnt->image : 'https://placehold.co/600x380/333/fff?text=Entertainment' }}" 
                                      class="card-img-top rounded-0" 
                                      alt="{{ $mainEnt->title }}">
                                 <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
@@ -24,6 +24,7 @@
                                     <a href="{{ route('front.news.details', $mainEnt->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $mainEnt->title }}
                                     </a>
+                                    <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($mainEnt->created_at) }}</small>
                                 </h4>
                                 <p class="card-text text-secondary mt-2">
                                     {{ Str::limit(strip_tags($mainEnt->content), 150) }}
@@ -40,7 +41,7 @@
                             <div class="col-md-6">
                                 <div class="card border-0 text-white overlay-card">
                                     <div class="position-relative">
-                                        <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/444/fff?text=Ent' }}" 
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/444/fff?text=Ent' }}" 
                                              class="card-img rounded-0" 
                                              alt="{{ $news->title }}"
                                              style="height: 180px; object-fit: cover; width: 100%;">
@@ -51,6 +52,7 @@
                                                     <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                         {{ $news->title }}
                                                     </a>
+                                                    <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                                 </h6>
                                             </div>
                                         </div>
@@ -68,7 +70,7 @@
                     <div class="col-lg-3 col-6">
                         <div class="card border-0 text-white overlay-card">
                             <div class="position-relative">
-                                <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x160/222/fff?text=Ent' }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x160/222/fff?text=Ent' }}" 
                                      class="card-img rounded-0" 
                                      alt="{{ $news->title }}"
                                      style="height: 160px; object-fit: cover; width: 100%;">
@@ -79,6 +81,7 @@
                                             <a href="{{ route('front.news.details', $news->slug) }}" class="text-white text-decoration-none">
                                                 {{ $news->title }}
                                             </a>
+                                            <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                         </h6>
                                     </div>
                                 </div>

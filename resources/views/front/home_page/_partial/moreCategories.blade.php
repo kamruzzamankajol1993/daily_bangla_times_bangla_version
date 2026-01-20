@@ -27,7 +27,7 @@
                         {{-- Main Item (Big Image) --}}
                         <div class="card border-0 shadow-sm mb-3">
                             <div class="position-relative">
-                                <img src="{{ $mainItem->image ? $front_admin_url.$mainItem->image : 'https://placehold.co/400x250/333/fff?text='.$section['title'] }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $mainItem->image ? $front_admin_url.$mainItem->image : 'https://placehold.co/400x250/333/fff?text='.$section['title'] }}" 
                                      class="card-img-top rounded-0 extra-cat-main-img" 
                                      alt="{{ $mainItem->title }}">
                                 <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 m-2 rounded"><i class="fas fa-camera"></i></span>
@@ -38,6 +38,7 @@
                                         {{ $mainItem->title }}
                                     </a>
                                 </h6>
+                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($mainItem->created_at) }}</small>
                             </div>
                         </div>
 
@@ -46,14 +47,17 @@
                             @foreach($section['data']->skip(1) as $news)
                                 <div class="card border-0 shadow-sm p-2">
                                     <div class="d-flex align-items-start">
-                                        <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/555/fff?text=News' }}" 
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x70/555/fff?text=News' }}" 
                                              class="me-2 rounded-1 flex-shrink-0 extra-cat-list-img" 
                                              alt="Thumb">
                                         <h6 class="fw-bold m-0 small lh-sm hover-red">
                                             <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none">
                                                 {{ Str::limit($news->title, 50) }}
                                             </a>
+                                               <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                         </h6>
+                                   
+                                         
                                     </div>
                                 </div>
                             @endforeach

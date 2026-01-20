@@ -3,7 +3,24 @@
 @section('title')
 {{ $post->title }} | {{ $front_ins_name }} 
 @endsection
+{{-- এই নতুন অংশটুকু যুক্ত করুন --}}
+@section('meta')
+    <meta name="description" content="{{ Str::limit(strip_tags($post->content), 150) }}">
+    <meta name="keywords" content="{{ $post->categories->first()->name ?? 'News' }}">
+    <meta name="author" content="{{ $post->author->name ?? $front_ins_name }}">
 
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($post->content), 150) }}">
+    <meta property="og:image" content="{{ $post->image ? $front_admin_url.$post->image : $front_admin_url.$front_logo_name }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $post->title }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($post->content), 150) }}">
+    <meta name="twitter:image" content="{{ $post->image ? $front_admin_url.$post->image : $front_admin_url.$front_logo_name }}">
+@endsection
+{{-- শেষ --}}
 @section('css')
 <style>
     .reaction-btn { transition: transform 0.2s; }
@@ -53,7 +70,7 @@
                             {{-- Author Info --}}
                             <div class="mb-2">
                                 @if($post->author && $post->author->image)
-                                    <img src="{{ $front_admin_url.$post->author->image }}" class="rounded-circle border" width="80" height="80" alt="{{ $post->author->name }}">
+                                    <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $front_admin_url.$post->author->image }}" class="rounded-circle border" width="80" height="80" alt="{{ $post->author->name }}">
                                 @else
                                     <i class="fas fa-user-circle fa-3x text-secondary"></i>
                                 @endif
@@ -137,7 +154,7 @@
 
                     {{-- Featured Image --}}
                     <div class="mb-3">
-                        <img src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/800x450/eee/333' }}" class="img-fluid w-100 rounded-1" alt="{{ $post->title }}">
+                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/800x450/eee/333' }}" class="img-fluid w-100 rounded-1" alt="{{ $post->title }}">
                         @if($post->image_caption)
                             <small class="text-muted d-block mt-1 bg-light p-1 border-bottom">{{ $post->image_caption }}</small>
                         @endif
@@ -163,7 +180,7 @@
                     <div class="my-4 p-4 bg-light text-center border no-print">
                         <small class="text-muted d-block mb-1">ADVERTISEMENT</small>
                         {{-- আপনার বিজ্ঞাপনের কোড বা ইমেজ এখানে বসান --}}
-                        <img src="https://placehold.co/600x100/ddd/999?text=Content+Bottom+Ad+(600x100)" class="img-fluid" alt="Advertisement">
+                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="https://placehold.co/600x100/ddd/999?text=Content+Bottom+Ad+(600x100)" class="img-fluid" alt="Advertisement">
                     </div>
                     
                     <hr class="my-5 no-print">
@@ -245,7 +262,7 @@
                             @foreach($post->comments as $comment)
                                 <div class="d-flex mb-3 border-bottom pb-3">
                                     <div class="flex-shrink-0">
-                                        <img src="https://ui-avatars.com/api/?name={{ $comment->name }}&background=random" class="rounded-circle me-3" width="50">
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="https://ui-avatars.com/api/?name={{ $comment->name }}&background=random" class="rounded-circle me-3" width="50">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="fw-bold mb-1">
@@ -277,7 +294,7 @@
                                                 @foreach($comment->replies as $reply)
                                                     <div class="d-flex mb-2">
                                                         <div class="flex-shrink-0">
-                                                            <img src="https://ui-avatars.com/api/?name={{ $reply->name }}&background=random" class="rounded-circle me-2" width="40">
+                                                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="https://ui-avatars.com/api/?name={{ $reply->name }}&background=random" class="rounded-circle me-2" width="40">
                                                         </div>
                                                         <div>
                                                             <h6 class="fw-bold small mb-0">{{ $reply->name }}</h6>
@@ -307,7 +324,7 @@
                         <div class="d-flex flex-column gap-3">
                             @foreach($latestNews as $lNews)
                             <div class="d-flex align-items-start border-bottom pb-2">
-                                <img src="{{ $lNews->image ? $front_admin_url.$lNews->image : 'https://placehold.co/90x60/111/fff' }}" class="me-2 rounded-1" width="90">
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $lNews->image ? $front_admin_url.$lNews->image : 'https://placehold.co/90x60/111/fff' }}" class="me-2 rounded-1" width="90">
                                 <a href="{{ route('front.news.details', $lNews->slug) }}" class="small fw-bold text-dark hover-red lh-sm">{{ Str::limit($lNews->title, 50) }}</a>
                             </div>
                             @endforeach
@@ -322,7 +339,7 @@
                         <div class="d-flex flex-column gap-3">
                             @foreach($popularNews as $pNews)
                             <div class="d-flex align-items-start border-bottom pb-2">
-                                <img src="{{ $pNews->image ? $front_admin_url.$pNews->image : 'https://placehold.co/90x60/222/fff' }}" class="me-2 rounded-1" width="90">
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $pNews->image ? $front_admin_url.$pNews->image : 'https://placehold.co/90x60/222/fff' }}" class="me-2 rounded-1" width="90">
                                 <a href="{{ route('front.news.details', $pNews->slug) }}" class="small fw-bold text-dark hover-red lh-sm">{{ Str::limit($pNews->title, 50) }}</a>
                             </div>
                             @endforeach

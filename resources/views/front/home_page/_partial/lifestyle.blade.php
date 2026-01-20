@@ -13,18 +13,20 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="card border-0 h-100 lifestyle-card">
                             <div class="position-relative">
-                                <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/400x240/333/fff?text=Lifestyle' }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/400x240/333/fff?text=Lifestyle' }}" 
                                      class="card-img-top rounded-0" 
                                      alt="{{ $news->title }}"
                                      style="height: 240px; object-fit: cover;">
                                 <span class="camera-icon-box"><i class="fas fa-camera"></i></span>
                             </div>
                             <div class="card-body px-0 pb-2">
+                              
                                 <h6 class="fw-bold m-0 lh-base">
                                     <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $news->title }}
                                     </a>
                                 </h6>
+                                  <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                             </div>
                         </div>
                     </div>
@@ -37,18 +39,20 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="card border-0 h-100 lifestyle-card">
                             <div class="position-relative">
-                                <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/222/fff?text=Lifestyle' }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/222/fff?text=Lifestyle' }}" 
                                      class="card-img-top rounded-0" 
                                      alt="{{ $news->title }}"
                                      style="height: 180px; object-fit: cover;">
                                 <span class="camera-icon-box"><i class="fas fa-camera"></i></span>
                             </div>
                             <div class="card-body px-0 pb-2">
+                                
                                 <h6 class="fw-bold m-0 lh-base small">
                                     <a href="{{ route('front.news.details', $news->slug) }}" class="text-dark text-decoration-none hover-red">
                                         {{ $news->title }}
                                     </a>
                                 </h6>
+                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                             </div>
                         </div>
                     </div>

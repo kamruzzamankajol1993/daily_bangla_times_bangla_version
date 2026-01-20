@@ -1,14 +1,41 @@
 /* style.css - Complete File */
 
-/* 1. GENERAL & FONTS */
+/* ১. সব ব্রাউজারের জন্য স্ক্রলবার সম্পূর্ণ হাইড করা (Global Fix) */
+* {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE & Edge */
+}
+
+/* Chrome, Safari, Opera এর জন্য গ্লোবাল স্ক্রলবার হাইড */
+::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    background: transparent !important;
+}
+
+/* ২. HTML & BODY সেটিংস (White Gap & Sticky Fix) */
+html {
+    /* Sticky মেনু ঠিক রাখতে এবং সাদা দাগ দূর করতে */
+    overflow-x: hidden !important; 
+    height: 100%;
+    width: 100%;
+    /* বডি কালারের সাথে মিলিয়ে ব্যাকগ্রাউন্ড দেওয়া হলো যাতে গ্যাপ থাকলেও বোঝা না যায় */
+    background-color: #f5f5f5; 
+}
+
 body {
     font-family: 'Hind Siliguri', sans-serif;
     background-color: #f5f5f5;
-    font-size: 18px; /* Slightly larger text */
-}
-html, body {
-    overflow-x: hidden; /* ডানে বামে স্ক্রল বন্ধ করবে */
-    max-width: 100%;
+    font-size: 18px;
+    
+    /* হরিজন্টাল স্ক্রল বন্ধ, ভার্টিক্যাল অটো */
+    overflow-x: hidden !important;
+    overflow-y: auto !important; 
+    
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 a { text-decoration: none; color: inherit; }
 
@@ -789,3 +816,20 @@ a { text-decoration: none; color: inherit; }
 }
 
 
+/* ================================================== */
+/* Laptop/Medium Screen Menu Fix (1024px - 1366px)  */
+/* ================================================== */
+
+@media (min-width: 992px) and (max-width: 1400px) {
+    /* মেনুর আইটেমগুলোর প্যাডিং এবং ফন্ট কমানো হলো */
+    .custom-navbar .nav-link {
+        padding: 12px 8px !important; /* ডানে-বামে প্যাডিং ১৮ থেকে কমিয়ে ৮ করা হলো */
+        font-size: 14px !important;   /* ফন্ট ১৭ থেকে কমিয়ে ১৪ করা হলো */
+        border-right: 1px solid rgba(255,255,255,0.1); /* বর্ডার হালকা করা হলো */
+    }
+
+    /* ড্রপডাউন আইকন বা টেক্সট যাতে ভেঙে না যায় */
+    .custom-navbar .nav-link i {
+        font-size: 13px; 
+    }
+}

@@ -25,6 +25,14 @@
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Date Style - Small Font */
+    .bangla-date {
+        font-size: 11px;
+        color: green;
+        display: block;
+        margin-top: 3px;
+    }
 </style>
 @endsection
 
@@ -41,7 +49,7 @@
                 <div class="col-lg-3 col-md-6 order-2 order-lg-1 d-flex flex-column">
                     <div class="card border-0 mb-3 news-card shadow-sm h-auto flex-shrink-0">
                         <div class="position-relative">
-                            <img src="{{$front_admin_url}}{{$front_madam_image}}" class="card-img-top rounded-0" alt="News">
+                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{$front_admin_url}}{{$front_madam_image}}" class="card-img-top rounded-0" alt="News">
                         </div>
                     </div>
                     
@@ -49,13 +57,14 @@
                         @if(isset($madamUnderNews) && count($madamUnderNews) > 0)
                             @foreach($madamUnderNews as $news)
                                 <div class="d-flex {{ $loop->last ? 'mb-0 pb-0' : 'mb-2 border-bottom pb-2' }} align-items-start">
-                                    <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/90x60/333/fff?text=News' }}" 
+                                    <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/90x60/333/fff?text=News' }}" 
                                          class="me-2 rounded-1 flex-shrink-0" width="90" height="60" style="object-fit: cover;">
                                     <div class="w-100">
                                         @if($news->subtitle) <div class="news-subtitle">{{ $news->subtitle }}</div> @endif
                                         <a href="{{ route('front.news.details', $news->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">
                                             {{ $news->title }}
                                         </a>
+                                        <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                     </div>
                                 </div>
                             @endforeach
@@ -72,11 +81,12 @@
                             <div class="carousel-inner">
                                 @foreach($sliderPosts as $key => $post)
                                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                        <img src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/600x380/006a4e/white?text=Slider' }}" 
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/600x380/006a4e/white?text=Slider' }}" 
                                              class="d-block w-100 object-fit-cover" alt="{{ $post->title }}">
                                         <div class="carousel-caption d-none d-md-block news-caption-overlay">
                                             <h4 class="fw-bold mb-1">
                                                 <a href="{{ route('front.news.details', $post->slug) }}" class="text-white text-decoration-none">{{ $post->title }}</a>
+                                                <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($post->created_at) }}</small>
                                             </h4>
                                             @if($post->subtitle)
                                                 <p class="small mb-2">{{ Str::limit($post->subtitle, 100) }}</p>
@@ -94,14 +104,16 @@
                                 <div class="col-6">
                                     <div class="card border-0 h-100 shadow-sm">
                                         <div class="overflow-hidden">
-                                            <img src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/300x180/333/fff?text=News' }}" 
+                                            <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url . $news->image : 'https://placehold.co/300x180/333/fff?text=News' }}" 
                                                  class="card-img-top rounded-0 zoom-effect" alt="{{ $news->title }}">
                                         </div>
                                         <div class="card-body p-2">
                                             @if($news->subtitle) <div class="news-subtitle">{{ $news->subtitle }}</div> @endif
                                             <h6 class="fw-bold hover-red title-truncate">
                                                 <a href="{{ route('front.news.details', $news->slug) }}" class=" hover-red text-dark text-decoration-none">{{ $news->title }}</a>
+
                                             </h6>
+                                                                                        <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -129,12 +141,13 @@
                                     @foreach($latestPosts as $post)
                                         <div class="news-item border-bottom py-2 d-flex align-items-start">
                                             <div class="flex-shrink-0">
-                                                 <img src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/90x60/111/fff?text=No+Image' }}" 
+                                                 <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/90x60/111/fff?text=No+Image' }}" 
                                                       class="me-2 rounded-1" width="90" height="60" style="object-fit: cover;">
                                             </div>
                                             <div class="w-100">
                                                 @if($post->subtitle) <div class="news-subtitle">{{ $post->subtitle }}</div> @endif
                                                 <a href="{{ route('front.news.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">{{ $post->title }}</a>
+                                                    <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($post->created_at) }}</small>
                                             </div>
                                         </div>
                                     @endforeach
@@ -149,12 +162,13 @@
                                     @foreach($popularPosts as $post)
                                         <div class="news-item border-bottom py-2 d-flex align-items-start">
                                             <div class="flex-shrink-0">
-                                                 <img src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/90x60/222/fff?text=No+Image' }}" 
+                                                 <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $post->image ? $front_admin_url . $post->image : 'https://placehold.co/90x60/222/fff?text=No+Image' }}" 
                                                       class="me-2 rounded-1" width="90" height="60" style="object-fit: cover;">
                                             </div>
                                             <div class="w-100">
                                                 @if($post->subtitle) <div class="news-subtitle">{{ $post->subtitle }}</div> @endif
                                                 <a href="{{ route('front.news.details', $post->slug) }}" class="small fw-bold text-dark hover-red lh-sm text-decoration-none">{{ $post->title }}</a>
+                                                    <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($post->created_at) }}</small>
                                             </div>
                                         </div>
                                     @endforeach
@@ -169,7 +183,7 @@
                     <div class="ad-container text-center mt-auto">
                         <div class="animated-ad-box">
                             <a href="https://zahidfsardersaddi.com/" target="_blank" rel="noopener">
-                                <img src="{{$front_admin_url}}{{$front_personal_logo}}" alt="Ad" class="img-fluid">
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{$front_admin_url}}{{$front_personal_logo}}" alt="Ad" class="img-fluid">
                             </a>
                         </div>
                     </div>
@@ -267,7 +281,7 @@
         // স্ক্রল ইভেন্ট: ইউজার পেজের নিচের দিকে আসলে পরের ব্যাচ লোড হবে
         $(window).scroll(function() {
             // ফুটারের ৪০০ পিক্সেল আগে লোড শুরু হবে
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 1000) {
                 loadMoreSections();
             }
         });

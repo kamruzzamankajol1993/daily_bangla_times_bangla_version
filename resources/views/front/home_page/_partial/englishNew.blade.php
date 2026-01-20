@@ -6,7 +6,7 @@
         </div>
 
         <div class="text-center mb-4">
-            <img src="{{ $front_admin_url }}{{ $front_english_banner }}" alt="English Logo" class="img-fluid">
+           <a href="{{ $front_english_url }}" target="_blank"><img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $front_admin_url }}{{ $front_english_banner }}" alt="English Logo" class="img-fluid"></a>
         </div>
 
         <div class="row g-3">
@@ -16,7 +16,7 @@
                         <div class="card border-0 h-100">
                             {{-- ইমেজ --}}
                             <div class="overflow-hidden">
-                                <img src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/333/fff?text=News' }}" 
+                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/300x180/333/fff?text=News' }}" 
                                      class="card-img-top rounded-0 mb-2 zoom-effect" 
                                      alt="{{ $news->title }}"
                                      style="height: 180px; object-fit: cover;">
@@ -27,6 +27,7 @@
                                 <a href="{{ $front_english_url.'news/'.$news->slug }}" class="hover-red text-dark text-decoration-none">
                                     {{ $news->title }}
                                 </a>
+                            <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ $news->created_at->format('d F Y') }}</small>
                             </h6>
                         </div>
                     </div>

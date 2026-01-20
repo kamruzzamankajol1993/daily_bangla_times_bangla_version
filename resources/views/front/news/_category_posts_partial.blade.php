@@ -22,7 +22,7 @@
                 <div class="overflow-hidden mb-2 position-relative">
                     {{-- Image --}}
                     <a href="{{ route('front.news.details', $post->slug) }}">
-                        <img src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/400x240/ddd/333?text=No+Image' }}" 
+                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/400x240/ddd/333?text=No+Image' }}" 
                              class="card-img-top rounded-0 zoom-img" 
                              alt="{{ $post->title }}">
                     </a>

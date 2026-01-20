@@ -14,10 +14,7 @@ Route::get('/clear', function() {
     return redirect()->back();
 });
 
-// Video News Detail Route
-Route::get('/video-gallery/{slug}', [App\Http\Controllers\Front\FrontController::class, 'videoDetail'])->name('front.video.details');
-//frontend part start 
-Route::post('/contact-us-post', [App\Http\Controllers\Front\FrontController::class, 'contactUsPost'])->name('front.contactUsPost');
+
 Route::controller(FrontController::class)->group(function () {
 
 Route::get('/load-more-news', 'getMoreNews')->name('front.load.more.news');
@@ -36,8 +33,16 @@ Route::get('/load-more-news', 'getMoreNews')->name('front.load.more.news');
     Route::get('/news-category/{slug}', 'newsList')->name('front.category.news');
   
     Route::get('/news/{slug}', 'newsDetails')->name('front.news.details');
+    Route::get('/single/post/{id}', 'newsDetailsOld')->name('news.detailsOld');
+// ভিডিও গ্যালারি লিস্ট পেজ (সকল ভিডিও)
+Route::get('/video-gallery', 'videoList')->name('front.video.gallery');
+});
 
-});Route::get('/search', [FrontController::class, 'search'])->name('front.search');
+// Video News Detail Route
+Route::get('/video-gallery/{slug}', [App\Http\Controllers\Front\FrontController::class, 'videoDetail'])->name('front.video.details');
+//frontend part start 
+Route::post('/contact-us-post', [App\Http\Controllers\Front\FrontController::class, 'contactUsPost'])->name('front.contactUsPost');
+Route::get('/search', [FrontController::class, 'search'])->name('front.search');
    
 Route::post('/comment-store', [FrontController::class, 'storeComment'])->name('front.comment.store');
 Route::post('/reaction-store', [FrontController::class, 'storeReaction'])->name('front.reaction.store');
@@ -51,15 +56,4 @@ Route::post('/payment/cancel', [FrontController::class, 'paymentCancel'])->name(
 
 
 
-
-
-
-    
-
-
-
-Route::group(['middleware' => ['auth']], function() {
-
-
-});
 

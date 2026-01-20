@@ -2,9 +2,12 @@
     <div class="container">
         
         <div class="d-flex justify-content-between align-items-end mb-3" style="border-bottom: 3px solid #dc3545;">
+           
+           <a href="{{ route('front.video.gallery') }}" class="text-decoration-none">
             <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 fw-bold">
                 ভিডিও গ্যালারি <i class="fas fa-chevron-right small ms-2"></i>
             </h5>
+           </a>
             
             <div class="video-nav-buttons mb-2">
                 <button class="btn btn-outline-dark rounded-circle btn-sm me-1" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev">
@@ -29,7 +32,7 @@
                                         <div class="card border-0 text-white h-100 video-card-modern">
                                             <div class="position-relative h-100 overflow-hidden rounded">
                                                 {{-- থাম্বনেইল --}}
-                                                <img src="{{ $video->thumbnail ? $front_admin_url.$video->thumbnail : 'https://placehold.co/400x250/333/fff?text=Video' }}" 
+                                                <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $video->thumbnail ? $front_admin_url.$video->thumbnail : 'https://placehold.co/400x250/333/fff?text=Video' }}" 
                                                      class="card-img h-100 object-fit-cover" 
                                                      alt="{{ $video->title }}">
                                                 
@@ -39,6 +42,7 @@
                                                         <a href="{{ route('front.video.details', $video->slug) }}" class="text-white text-decoration-none">
                                                             {{ Str::limit($video->title, 60) }}
                                                         </a>
+                                                       
                                                     </h5>
                                                     
                                                     {{-- প্লে বাটন (ডিটেইলস পেজে নিয়ে যাবে) --}}
@@ -48,7 +52,7 @@
                                                     
                                                     {{-- সময় --}}
                                                     <small class="text-light-50 mt-2">
-                                                        <i class="far fa-clock"></i> {{ $video->created_at->diffForHumans() }}
+                                                        <i class="far fa-clock"></i> {{ bangla_date($video->created_at) }}
                                                     </small>
                                                 </div>
                                             </div>
