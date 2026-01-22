@@ -36,9 +36,19 @@
             </div>
 
         </div>
-        
+        @if(isset($header_ad))
         <div class="ad-slot my-2 d-none d-lg-block">
-            <img src="https://placehold.co/728x90/eee/999?text=HEADER+AD+SPACE+(728x90)" class="img-fluid">
+           {{-- Type 1: Image Advertisement --}}
+                @if($header_ad->type == 1 && !empty($header_ad->image))
+                    <a href="{{ $header_ad->link ?? 'javascript:void(0)' }}" {{ !empty($header_ad->link) ? 'target="_blank"' : '' }}>
+                        <img src="{{ $front_admin_url }}public/{{ $header_ad->image }}" class="img-fluid" alt="Header Advertisement" style="max-height: 90px;">
+                    </a>
+                
+                {{-- Type 2: Script Advertisement (Google Adsense, etc.) --}}
+                @elseif($header_ad->type == 2 && !empty($header_ad->script))
+                    {!! $header_ad->script !!}
+                @endif
         </div>
+        @endif
     </div>
 </header>

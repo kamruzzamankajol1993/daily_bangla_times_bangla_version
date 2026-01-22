@@ -48,7 +48,7 @@
             $bn_months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
 
             $en_am_pm = ['am', 'pm', 'AM', 'PM'];
-            $bn_am_pm = ['পূর্বাহ্ণ', 'অপরাহ্ণ', 'পূর্বাহ্ণ', 'অপরাহ্ণ'];
+            $bn_am_pm = ['এএম', 'পিএম ', 'এএম', 'পিএম '];
 
             $str = str_replace($en_months, $bn_months, $str);
             $str = str_replace($en_am_pm, $bn_am_pm, $str);
@@ -88,7 +88,8 @@
                                 <p class="mb-1">
                                     <strong>প্রকাশিত :</strong> <br>
                                     {{-- Format: 07 October 2025, 09:50:41 PM --}}
-                                    {{ convertToBangla($post->created_at->format('d F Y, h:i:s A')) }}
+                                    <span>{{ convertToBangla($post->created_at->format('d F Y')) }}</span>,
+                                    <span>{{ convertToBangla(date('h:i A', strtotime($post->bangladesh_time))) }}</span>
                                 </p>
                             </div>
 
@@ -177,11 +178,19 @@
                     </div>
 
                     {{-- AD SECTION: Under Content Paragraph --}}
+                    @if(isset($news_detail_after_content_ad))
                     <div class="my-4 p-4 bg-light text-center border no-print">
                         <small class="text-muted d-block mb-1">ADVERTISEMENT</small>
-                        {{-- আপনার বিজ্ঞাপনের কোড বা ইমেজ এখানে বসান --}}
-                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="https://placehold.co/600x100/ddd/999?text=Content+Bottom+Ad+(600x100)" class="img-fluid" alt="Advertisement">
+                        
+                        @if($news_detail_after_content_ad->type == 1 && !empty($news_detail_after_content_ad->image))
+                            <a href="{{ $news_detail_after_content_ad->link ?? 'javascript:void(0)' }}" {{ !empty($news_detail_after_content_ad->link) ? 'target="_blank"' : '' }}>
+                                <img src="{{ $front_admin_url }}public/{{ $news_detail_after_content_ad->image }}" class="img-fluid" alt="Advertisement">
+                            </a>
+                        @elseif($news_detail_after_content_ad->type == 2 && !empty($news_detail_after_content_ad->script))
+                            {!! $news_detail_after_content_ad->script !!}
+                        @endif
                     </div>
+                    @endif
                     
                     <hr class="my-5 no-print">
 
@@ -347,14 +356,18 @@
                     </div>
 
                     {{-- AD SECTION: Under Popular News (জনপ্রিয় সংবাদ) --}}
+                    @if(isset($news_detail_sidebar_ad))
                     <div class="mb-4 text-center">
-                         <div class="bg-light border d-flex align-items-center justify-content-center text-secondary" style="height: 250px; width: 100%;">
-                            <div class="text-center">
-                                <h5 class="fw-bold">AD SPACE</h5>
-                                <small>Sidebar Bottom (300x250)</small>
-                            </div>
-                        </div>
+                         @if($news_detail_sidebar_ad->type == 1 && !empty($news_detail_sidebar_ad->image))
+                            <a href="{{ $news_detail_sidebar_ad->link ?? 'javascript:void(0)' }}" {{ !empty($news_detail_sidebar_ad->link) ? 'target="_blank"' : '' }}>
+                                <img src="{{ $front_admin_url }}public/{{ $news_detail_sidebar_ad->image }}" class="img-fluid border" alt="Sidebar Ad">
+                            </a>
+                        @elseif($news_detail_sidebar_ad->type == 2 && !empty($news_detail_sidebar_ad->script))
+                            {!! $news_detail_sidebar_ad->script !!}
+                        @endif
                     </div>
+                    
+                    @endif
 
                 </div>
 

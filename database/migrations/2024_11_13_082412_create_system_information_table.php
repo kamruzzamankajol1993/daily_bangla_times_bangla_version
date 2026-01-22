@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('develop_by')->nullable();
             $table->string('charge')->nullable();
             $table->string('usdollar')->nullable();
+            $table->text('fact_check_url')->nullable();
+            
             $table->timestamps();
         });
     }

@@ -13,6 +13,7 @@ class AdministrativeCategory extends Model
     protected $fillable = [
         'parent_id',
         'name',
+        'eng_name',
         'slug',
         'image',
         'status',

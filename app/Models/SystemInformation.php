@@ -41,5 +41,6 @@ class SystemInformation extends Model
         'english_footer_logo',
         'watermark',
         'madam_image',
+        'fact_check_url',
     ];
 }

@@ -2,7 +2,12 @@
     <div class="container">
         
         <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
-            <h5 class="bg-success text-white d-inline-block px-3 py-1 m-0 fw-bold text-uppercase">PHOTO GALLERY</h5>
+            @php
+            $photoSlug = (isset($photoGalleryNews) && count($photoGalleryNews) > 0) ? ($photoGalleryNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $photoSlug != '#' ? route('front.category.news', $photoSlug) : '#' }}" class="text-white text-decoration-none">
+            <h5 class="bg-success text-white d-inline-block px-3 py-1 m-0 fw-bold text-uppercase">ফটো গ্যালারি</h5>
+        </a>
         </div>
 
         @if(isset($photoGalleryNews) && count($photoGalleryNews) > 0)

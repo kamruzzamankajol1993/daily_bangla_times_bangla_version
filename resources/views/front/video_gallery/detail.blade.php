@@ -28,7 +28,6 @@
         padding-bottom: 56.25%; /* 16:9 */
         height: 0;
         overflow: hidden;
-        background: #000;
         margin-bottom: 20px;
         border-radius: 5px;
     }
@@ -36,8 +35,6 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100% !important;
-        height: 100% !important;
         border: 0;
     }
 

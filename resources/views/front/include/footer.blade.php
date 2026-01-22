@@ -314,7 +314,7 @@
                                         <i class="fas fa-pen-nib text-danger me-1"></i> Publisher and Editor-in-Chief
                                     </div>
 
-                                    <a href="#" class="contributor-btn">
+                                    <a href="{{ route('front.contributor') }}" class="contributor-btn">
                                         Contributor Profile
                                     </a>
                                 </div>
@@ -348,7 +348,7 @@
                                 <div class="office-box h-100">
                                     <h6 class="text-white fw-bold mb-2 text-uppercase small">Bangladesh Office</h6>
                                     <p class="mb-0 text-white-50 small">
-                                        <i class="fas fa-map-marker-alt me-2 text-danger"></i> House: 12, Road: 05, Dhanmondi, Dhaka-1209
+                                        <i class="fas fa-map-marker-alt me-2 text-danger"></i>{{$front_ins_add}}
                                     </p>
                                 </div>
                             </div>

@@ -108,13 +108,24 @@
                 <div class="col-lg-3">
                     {{-- Sticky Wrapper Class Added Here --}}
                     <div class="sticky-sidebar-wrapper">
-                        <div class="bg-light border d-flex align-items-center justify-content-center text-secondary" style="height: 600px; width: 100%;">
+                        @if(isset($category_sidebar_ad))
                             <div class="text-center">
-                                <h5 class="fw-bold">AD SPACE</h5>
-                                <small>300x600</small>
-                                <p class="small text-muted mt-2">(Fixed on Scroll)</p>
+                                {{-- Type 1: Image --}}
+                                @if($category_sidebar_ad->type == 1 && !empty($category_sidebar_ad->image))
+                                    <a href="{{ $category_sidebar_ad->link ?? 'javascript:void(0)' }}" {{ !empty($category_sidebar_ad->link) ? 'target="_blank"' : '' }}>
+                                        <img src="{{ $front_admin_url }}public/{{ $category_sidebar_ad->image }}" 
+                                             class="img-fluid border" 
+                                             alt="Sidebar Advertisement"
+                                             style="width: 100%; height: auto;">
+                                    </a>
+                                
+                                {{-- Type 2: Script --}}
+                                @elseif($category_sidebar_ad->type == 2 && !empty($category_sidebar_ad->script))
+                                    {!! $category_sidebar_ad->script !!}
+                                @endif
                             </div>
-                        </div>
+                       
+                        @endif
                     </div>
                 </div>
 

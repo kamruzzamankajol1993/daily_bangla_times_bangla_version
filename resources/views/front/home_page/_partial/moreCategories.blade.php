@@ -16,9 +16,16 @@
                 <div class="col-lg-3 col-md-6">
                     {{-- Header --}}
                     <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                        @php
+            // প্রতিটি সেকশনের ডাটা থেকে স্লাগ বের করা হচ্ছে
+            $secSlug = ($section['data']->count() > 0) ? ($section['data']->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        
+        <a href="{{ $secSlug != '#' ? route('front.category.news', $secSlug) : '#' }}" class="text-white text-decoration-none">
                         <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative" style="font-size: 16px;">
                             {{ $section['title'] }}
                         </h5>
+        </a>
                     </div>
 
                     @if($section['data']->count() > 0)

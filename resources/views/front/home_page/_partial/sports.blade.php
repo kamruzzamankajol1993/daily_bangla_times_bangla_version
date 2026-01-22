@@ -2,7 +2,12 @@
     <div class="container">
         
         <div class="section-header-wrapper mb-4" style="border-bottom: 3px solid #dc3545;">
+            @php
+            $sportSlug = (isset($sportsNews) && count($sportsNews) > 0) ? ($sportsNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $sportSlug != '#' ? route('front.category.news', $sportSlug) : '#' }}" class="text-white text-decoration-none">
             <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">খেলা</h5>
+        </a>
         </div>
 
         <div class="row g-4 d-flex align-items-stretch">

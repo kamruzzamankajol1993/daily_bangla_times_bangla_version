@@ -5,7 +5,12 @@
             {{-- International News Part --}}
             <div class="col-lg-9">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $intlSlug = (isset($internationalNews) && count($internationalNews) > 0) ? ($internationalNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $intlSlug != '#' ? route('front.category.news', $intlSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative" style="top: 0;">আন্তর্জাতিক</h5>
+        </a>
                 </div>
 
                 <div class="row g-4 d-flex align-items-stretch">
@@ -81,7 +86,13 @@
                 {{-- Opinion Section --}}
                 <div>
                     <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                        @php
+            $opSlug = (isset($opinionNews) && count($opinionNews) > 0) ? ($opinionNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $opSlug != '#' ? route('front.category.news', $opSlug) : '#' }}" class="text-white text-decoration-none">
                         <h6 class="bg-success text-white d-inline-block px-3 py-1 m-0">সাক্ষাৎকার</h6>
+        </a>
+        
                     </div>
 
                     <div class="d-flex flex-column gap-2">

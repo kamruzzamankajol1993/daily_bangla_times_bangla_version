@@ -5,7 +5,12 @@
             {{-- ১. জাতীয় (National) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $natSlug = (isset($nationalNews) && count($nationalNews) > 0) ? ($nationalNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $natSlug != '#' ? route('front.category.news', $natSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">জাতীয়</h5>
+        </a>
                 </div>
 
                 @if(isset($nationalNews) && count($nationalNews) > 0)
@@ -58,7 +63,12 @@
             {{-- ২. রাজনীতি (Politics) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $polSlug = (isset($politicsNews) && count($politicsNews) > 0) ? ($politicsNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $polSlug != '#' ? route('front.category.news', $polSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">রাজনীতি</h5>
+        </a>
                 </div>
 
                 @if(isset($politicsNews) && count($politicsNews) > 0)
@@ -111,7 +121,12 @@
             {{-- ৩. অর্থনীতি (Economy) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $ecoSlug = (isset($economyNews) && count($economyNews) > 0) ? ($economyNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $ecoSlug != '#' ? route('front.category.news', $ecoSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">অর্থনীতি</h5>
+        </a>
                 </div>
 
                 @if(isset($economyNews) && count($economyNews) > 0)

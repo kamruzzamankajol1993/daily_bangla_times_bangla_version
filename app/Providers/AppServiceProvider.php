@@ -12,6 +12,7 @@ use App\Models\Category;   // Import Category Model
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use App\Models\Post;
+use App\Models\Advertisement;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -34,6 +35,45 @@ class AppServiceProvider extends ServiceProvider
             'offer' => 'App\Models\Offer',
             'service' => 'App\Models\Service',
         ]);
+
+
+        // ==========================================
+            // NEW CODE: Dynamic Advertisement Logic
+            // ==========================================
+
+            $category_sidebar_ad = Advertisement::where('position', 'Category Sidebar')
+                                        ->where('status', 1)
+                                        ->first();
+    view()->share('category_sidebar_ad', $category_sidebar_ad);
+            
+            // Fetch the 'Header Top' advertisement if it is active (status = 1)
+            $header_ad = Advertisement::where('position', 'Header Top')
+                                      ->where('status', 1)
+                                      ->first();
+            
+            // Share the variable with all views
+            view()->share('header_ad', $header_ad);
+
+            $home_middle_ad = Advertisement::where('position', 'Home Middle Section')
+                                   ->where('status', 1)
+                                   ->first();
+    view()->share('home_middle_ad', $home_middle_ad);
+$archive_sidebar_ad = Advertisement::where('position', 'Archive Sidebar')
+                                       ->where('status', 1)
+                                       ->first();
+    view()->share('archive_sidebar_ad', $archive_sidebar_ad);
+
+
+    // 5. News Detail Sidebar (NEW)
+    $news_detail_sidebar_ad = Advertisement::where('position', 'News Detail Sidebar')->where('status', 1)->first();
+    view()->share('news_detail_sidebar_ad', $news_detail_sidebar_ad);
+
+    // 6. News Detail After Content (NEW)
+    $news_detail_after_content_ad = Advertisement::where('position', 'News Detail After Content')->where('status', 1)->first();
+    view()->share('news_detail_after_content_ad', $news_detail_after_content_ad);
+            // ==========================================
+            // END NEW CODE
+            // ==========================================
         ///new code start
 view()->composer('front.include.headline', function ($view) {
     

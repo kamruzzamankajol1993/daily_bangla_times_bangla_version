@@ -58,7 +58,7 @@
                         </div>
                         <div>
                             <h6 class="fw-bold mb-1">প্রধান কার্যালয় (USA)</h6>
-                            <p class="text-secondary small mb-0">2609 E 14th Street, Suite-515,<br>Brooklyn, New York 11235</p>
+                            <p class="text-secondary small mb-0">{{ $front_us_office_address }}</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                         </div>
                         <div>
                             <h6 class="fw-bold mb-1">বাংলাদেশ অফিস</h6>
-                            <p class="text-secondary small mb-0">House: 12, Road: 05,<br>Dhanmondi, Dhaka-1209</p>
+                            <p class="text-secondary small mb-0">{{$front_ins_add}}</p>
                         </div>
                     </div>
                 </div>
@@ -87,8 +87,8 @@
                             <i class="fas fa-phone-alt fa-lg"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold mb-1">ফোন ও ফ্যাক্স</h6>
-                            <p class="text-secondary small mb-0">(929) 444-6678<br>(732) 963-6065</p>
+                            <h6 class="fw-bold mb-1">ফোন </h6>
+                            <p class="text-secondary small mb-0">{{ $front_ins_phone }}<br>{{ $front_ins_phone_one }}</p>
                         </div>
                     </div>
                 </div>
@@ -104,8 +104,8 @@
                         <div>
                             <h6 class="fw-bold mb-1">ইমেইল</h6>
                             <p class="text-secondary small mb-0">
-                                info@dailybanglatimes.com<br>
-                                dailybanglatimes@gmail.com
+                                {{$front_ins_email}}<br>
+                                {{$front_email_one}}
                             </p>
                         </div>
                     </div>
@@ -189,19 +189,19 @@
                     <ul class="list-unstyled dept-list m-0">
                         <li>
                             <span class="fw-bold text-dark">নিউজ ডেস্ক</span>
-                            <a href="mailto:news@dailybanglatimes.com" class="text-danger text-decoration-none small">news@dailybanglatimes.com</a>
+                            <a href="mailto:news@dailybanglatimes.com" class="text-danger text-decoration-none small">#</a>
                         </li>
                         <li>
                             <span class="fw-bold text-dark">বিজ্ঞাপন বিভাগ</span>
-                            <a href="mailto:ad@dailybanglatimes.com" class="text-danger text-decoration-none small">ad@dailybanglatimes.com</a>
+                            <a href="mailto:ad@dailybanglatimes.com" class="text-danger text-decoration-none small">#</a>
                         </li>
                         <li>
                             <span class="fw-bold text-dark">সার্কুলেশন</span>
-                            <a href="mailto:circ@dailybanglatimes.com" class="text-danger text-decoration-none small">circ@dailybanglatimes.com</a>
+                            <a href="mailto:circ@dailybanglatimes.com" class="text-danger text-decoration-none small">#</a>
                         </li>
                         <li>
-                            <span class="fw-bold text-dark">সম্পাদকীয়</span>
-                            <a href="mailto:editor@dailybanglatimes.com" class="text-danger text-decoration-none small">editor@dailybanglatimes.com</a>
+                            <span class="fw-bold text-dark">সম্পাদকীয়</span>
+                            <a href="mailto:editor@dailybanglatimes.com" class="text-danger text-decoration-none small">#</a>
                         </li>
                     </ul>
                 </div>

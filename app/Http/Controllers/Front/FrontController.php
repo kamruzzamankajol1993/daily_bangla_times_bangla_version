@@ -22,6 +22,10 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ExtraPage;
 use App\Models\PostCategory;
+use App\Models\AboutUs;
+use App\Models\Administrative;
+use App\Models\AdministrativeCategory;
+use App\Models\Designation;
 class FrontController extends Controller
 {
 
@@ -268,8 +272,8 @@ public function newsList(Request $request, $slug)
 
 
 
-// set_time_limit(0);             // 0 মানে ইনফিনিটি টাইম (কখনও টাইমআউট হবে না)
-//     ini_set('memory_limit', '-1');
+set_time_limit(0);             
+    ini_set('memory_limit', '-1');
 
 // ///////////////////
 
@@ -287,8 +291,9 @@ public function newsList(Request $request, $slug)
 //             $currentProcessingPage = $page;
             
 //             // API কল
-//             $apiUrl = "https://bangla.dailybanglatimes.com/api/posts-list-api?category_id=16&page={$page}";
-//             $response = Http::get($apiUrl);
+//             $apiUrl = "https://bangla.dailybanglatimes.com/api/posts-list-api?category_id=3&page={$page}";
+//             $response = Http::timeout(60)
+//                 ->retry(3, 2000)->get($apiUrl);
 
 //             if ($response->successful()) {
 //                 $jsonData = $response->json();
@@ -297,7 +302,21 @@ public function newsList(Request $request, $slug)
 
 //                 foreach ($posts as $apiPost) {
 //                     $currentApiPostId = $apiPost['id'];
+// // ======================================================
+//                     // নতুন কন্ডিশন: public_site ১ এবং year ২০২৫ হতে হবে
+//                     // ======================================================
+                    
+//                     // // ১. public_site চেক
+//                     // $isPublicSite = isset($apiPost['public_site']) && $apiPost['public_site'] == 0;
 
+//                     // // ২. Year চেক (created_at থেকে)
+//                     // $postYear = isset($apiPost['created_at']) ? Carbon::parse($apiPost['created_at'])->year : null;
+
+//                     // // যদি public_site ১ না হয় অথবা সাল ২০২৫ না হয়, তাহলে স্কিপ করুন
+//                     // if (!$isPublicSite || $postYear != 2026) {
+//                     //     continue;
+//                     // }
+//                     // ======================================================
 //                     // ১. ক্যাটাগরি চেক
 //                     $categoryName = $apiPost['category_name'] ?? null;
 //                     $categoryName = $apiPost['category_name'] ?? null;
@@ -413,7 +432,7 @@ public function newsList(Request $request, $slug)
 //             } else {
 //                 throw new \Exception("Failed to fetch data from API URL");
 //             }
-
+// sleep(1);
 //             $page++;
 
 //         } while ($page <= $lastPage);
@@ -745,11 +764,30 @@ public function search(Request $request)
 
 public function aboutUs()
     {
+        // 1. Fetch Description
+        $about = AboutUs::first();
 
+        // 2. Find the 'Contributor' Category ID
+        $cat = AdministrativeCategory::where('eng_name', 'Contributor')
+                ->orWhere('eng_name', 'contributor')
+                ->first();
 
-        return view('front.about_us');
+        $contributors = collect([]);
+
+        if ($cat) {
+            // 3. Query Administrative where category_id array contains this ID
+            // We use 'like' here which is safest for TEXT columns storing JSON (e.g. ["1","2"])
+            // If your column is officially 'json' type, you can use whereJsonContains('category_id', (string)$cat->id)
+            
+            $contributors = Administrative::where('category_id', 'like', '%"'.$cat->id.'"%')
+                ->with('socialLinks')
+                ->where('status', 1)
+                ->orderBy('order_id', 'asc')
+                ->get();
+        }
+
+        return view('front.about_us', compact('about', 'contributors'));
     }
-
 
 
     public function contactUs()
@@ -760,8 +798,82 @@ public function aboutUs()
 
 
     public function team()
+{
+    // 1. Fetch all active members sorted by order_id
+    $allMembers = Administrative::with(['socialLinks'])
+        ->where('status', 1)
+        ->orderBy('order_id', 'asc')
+        ->get();
+
+    // 2. Identify Top Designation IDs (Publisher, Editor-in-Chief)
+    // We search loosely to catch "Publisher", "Editor-in-Chief", "Publisher & Editor" etc.
+    $topDesignationIds = Designation::where('eng_name', 'LIKE', '%Publisher%')
+        ->orWhere('eng_name', 'LIKE', '%Editor%Chief%') // Covers "Editor-in-Chief", "Editor in Chief"
+        ->pluck('id')
+        ->toArray();
+
+    // 3. Separate Top Leaders from Regular Members
+    $topLeaders = $allMembers->filter(function ($member) use ($topDesignationIds) {
+        $memberDesignations = $member->designation_id ?? []; // This is an array due to $casts
+        // Check if the member has ANY of the top designation IDs
+        // We use array_intersect to check for matching values
+        return !empty(array_intersect($memberDesignations, $topDesignationIds));
+    });
+
+    // Get IDs of top leaders to exclude them from the category list
+    $topLeaderIds = $topLeaders->pluck('id')->toArray();
+
+    // 4. Prepare Category-wise List for the rest
+    $categories = AdministrativeCategory::where('status', 1)
+        ->orderBy('id', 'asc') // You can change this to order_id if you have it in categories table
+        ->get();
+
+    $categorizedTeam = [];
+
+    foreach ($categories as $category) {
+        // Filter members belonging to this category who are NOT top leaders
+        $members = $allMembers->filter(function ($member) use ($category, $topLeaderIds) {
+            if (in_array($member->id, $topLeaderIds)) return false; // Skip top leaders
+            
+            $memberCats = $member->category_id ?? [];
+            return in_array($category->id, $memberCats);
+        });
+
+        if ($members->isNotEmpty()) {
+            $categorizedTeam[] = [
+                'info' => $category,
+                'members' => $members
+            ];
+        }
+    }
+
+    return view('front.team', compact('topLeaders', 'categorizedTeam'));
+}
+
+
+public function contributor()
     {
-        return view('front.team');
+        // 1. Find the 'Contributor' Category ID by Name (English or Bangla)
+        $category = AdministrativeCategory::where('eng_name', 'LIKE', '%Contributor%')
+            ->orWhere('name', 'LIKE', '%কন্ট্রিবিউটর%')
+            ->first();
+
+        $contributors = collect([]);
+
+        if ($category) {
+            // 2. Fetch Active Members and filter by this Category ID
+            // Since category_id is an array (casted in Model), we filter using PHP collection
+            $contributors = Administrative::with('socialLinks')
+                ->where('status', 1)
+                ->orderBy('order_id', 'asc')
+                ->get()
+                ->filter(function ($member) use ($category) {
+                    $cats = $member->category_id ?? [];
+                    return in_array($category->id, $cats);
+                });
+        }
+
+        return view('front.contributor', compact('contributors', 'category'));
     }
 public function archive(Request $request)
 {

@@ -2,7 +2,9 @@
     <div class="container">
         
         <div class="d-flex align-items-end mb-3" style="border-bottom: 3px solid #dc3545;">
+            <a href="{{ $front_english_url ?? '#' }}" target="_blank" class="text-white text-decoration-none">
             <div class="bg-success text-white px-3 py-1 fw-bold text-uppercase">English</div>
+            </a>
         </div>
 
         <div class="text-center mb-4">

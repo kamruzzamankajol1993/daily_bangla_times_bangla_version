@@ -261,11 +261,11 @@
 
                     // ৪. অটোমেটিক পরের ব্যাচ লোড করার চেক (অপশনাল)
                     // যদি আপনি চান স্ক্রল না করলেও পেজ ভরে যাক, তবে নিচের লাইনটি আনকমেন্ট করুন
-                    /*
+                  
                     if (hasMore && $(window).height() > $(document).height() - 100) {
                          loadMoreSections();
                     }
-                    */
+                  
                 },
                 error: function() {
                     isLoading = false;

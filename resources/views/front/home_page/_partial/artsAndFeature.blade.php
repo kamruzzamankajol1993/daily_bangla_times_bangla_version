@@ -5,7 +5,12 @@
             {{-- ১. শিল্প ও সাহিত্য (Arts & Literature) --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $artSlug = (isset($artsLiteratureNews) && count($artsLiteratureNews) > 0) ? ($artsLiteratureNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $artSlug != '#' ? route('front.category.news', $artSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">শিল্প ও সাহিত্য</h5>
+        </a>
                 </div>
 
                 @if(isset($artsLiteratureNews) && count($artsLiteratureNews) > 0)
@@ -58,7 +63,12 @@
             {{-- ২. ফিচার (Features) --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $featSlug = (isset($featureNews) && count($featureNews) > 0) ? ($featureNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $featSlug != '#' ? route('front.category.news', $featSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">ফিচার</h5>
+        </a>
                 </div>
 
                 @if(isset($featureNews) && count($featureNews) > 0)
@@ -111,7 +121,12 @@
             {{-- ৩. নারী (Women) --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $womSlug = (isset($womenNews) && count($womenNews) > 0) ? ($womenNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $womSlug != '#' ? route('front.category.news', $womSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">নারী</h5>
+        </a>
                 </div>
 
                 @if(isset($womenNews) && count($womenNews) > 0)

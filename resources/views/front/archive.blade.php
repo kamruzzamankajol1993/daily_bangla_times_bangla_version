@@ -121,7 +121,7 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="card h-100 border-0 shadow-sm overflow-hidden">
                                         <div class="overflow-hidden">
-                                            <img src="{{ $post->image ? asset($post->image) : 'https://placehold.co/300x200/222/fff?text=No+Image' }}" 
+                                            <img src="{{ $post->image ? $front_admin_url.$post->image : 'https://placehold.co/300x200/222/fff?text=No+Image' }}" 
                                                  class="card-img-top archive-card-img rounded-0"
                                                  loading="lazy">
                                         </div>
@@ -232,9 +232,26 @@
                         
                         <div class="text-center">
                             {{-- এখানে আপনার অ্যাড কোড বসবে --}}
-                            <div style="background: #eee; height: 250px; display: flex; align-items: center; justify-content: center; color: #999;">
-                                বিজ্ঞাপন
-                            </div>
+                            @if(isset($archive_sidebar_ad))
+                                {{-- Type 1: Image --}}
+                                @if($archive_sidebar_ad->type == 1 && !empty($archive_sidebar_ad->image))
+                                    <a href="{{ $archive_sidebar_ad->link ?? 'javascript:void(0)' }}" {{ !empty($archive_sidebar_ad->link) ? 'target="_blank"' : '' }}>
+                                        <img src="{{ $front_admin_url }}public/{{ $archive_sidebar_ad->image }}" 
+                                             class="img-fluid border" 
+                                             alt="Archive Advertisement"
+                                             style="width: 100%; height: auto;">
+                                    </a>
+                                
+                                {{-- Type 2: Script --}}
+                                @elseif($archive_sidebar_ad->type == 2 && !empty($archive_sidebar_ad->script))
+                                    {!! $archive_sidebar_ad->script !!}
+                                @endif
+                            @else
+                                {{-- Fallback --}}
+                                <div style="background: #eee; height: 250px; display: flex; align-items: center; justify-content: center; color: #999;">
+                                    বিজ্ঞাপন
+                                </div>
+                            @endif
                         </div>
 
                     </div>

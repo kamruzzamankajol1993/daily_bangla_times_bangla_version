@@ -2,7 +2,15 @@
     <div class="container">
         
         <div class="section-header-wrapper mb-4" style="border-bottom: 2px solid #dc3545;">
+
+            @php
+            $lifeSlug = (isset($lifestyleNews) && count($lifestyleNews) > 0) ? ($lifestyleNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $lifeSlug != '#' ? route('front.category.news', $lifeSlug) : '#' }}" class="text-white text-decoration-none">
+
             <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 fw-bold">লাইফস্টাইল</h5>
+
+        </a>
         </div>
 
         @if(isset($lifestyleNews) && count($lifestyleNews) > 0)

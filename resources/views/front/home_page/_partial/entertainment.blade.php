@@ -1,8 +1,21 @@
 <section class="entertainment-section py-4 bg-light">
     <div class="container">
+
+        @php
+            // ডিফল্ট স্লাগ (যদি ডাটা না থাকে)
+            $catSlug = '#'; 
+            
+            // কন্ট্রোলার থেকে আসা ডাটা থেকে স্লাগ নেওয়া হচ্ছে
+            if(isset($entertainmentNews) && count($entertainmentNews) > 0) {
+                // প্রথম পোস্টের প্রথম ক্যাটাগরির স্লাগ নেওয়া হলো
+                $catSlug = $entertainmentNews->first()->categories->first()->slug ?? '#';
+            }
+        @endphp
         
         <div class="section-header-wrapper mb-4" style="border-bottom: 3px solid #dc3545;">
+            <a href="{{ $catSlug != '#' ? route('front.category.news', $catSlug) : '#' }}" class="text-decoration-none">
             <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">বিনোদন</h5>
+            </a>
         </div>
 
         @if(isset($entertainmentNews) && count($entertainmentNews) > 0)

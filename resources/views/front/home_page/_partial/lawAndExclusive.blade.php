@@ -5,7 +5,12 @@
             {{-- ১. আইন-আদালত (Law & Court) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $lawSlug = (isset($lawCourtsNews) && count($lawCourtsNews) > 0) ? ($lawCourtsNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $lawSlug != '#' ? route('front.category.news', $lawSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">আইন-আদালত</h5>
+        </a>
                 </div>
 
                 @if(isset($lawCourtsNews) && count($lawCourtsNews) > 0)
@@ -58,7 +63,12 @@
             {{-- ২. এক্সক্লুসিভ (Exclusive) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $exclSlug = (isset($exclusiveNews) && count($exclusiveNews) > 0) ? ($exclusiveNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $exclSlug != '#' ? route('front.category.news', $exclSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">এক্সক্লুসিভ</h5>
+        </a>
                 </div>
 
                 @if(isset($exclusiveNews) && count($exclusiveNews) > 0)
@@ -111,7 +121,14 @@
             {{-- ৩. স্বাস্থ্য (Health) Column --}}
             <div class="col-lg-4">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 3px solid #dc3545;">
+                    @php
+            $healthSlug = (isset($healthNews) && count($healthNews) > 0) ? ($healthNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $healthSlug != '#' ? route('front.category.news', $healthSlug) : '#' }}" class="text-white text-decoration-none">
+        
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 position-relative">স্বাস্থ্য</h5>
+
+        </a>
                 </div>
 
                 @if(isset($healthNews) && count($healthNews) > 0)

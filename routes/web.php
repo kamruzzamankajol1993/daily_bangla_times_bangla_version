@@ -14,7 +14,7 @@ Route::get('/clear', function() {
     return redirect()->back();
 });
 
-
+Route::get('/contributor', [App\Http\Controllers\Front\FrontController::class, 'contributor'])->name('front.contributor');
 Route::controller(FrontController::class)->group(function () {
 
 Route::get('/load-more-news', 'getMoreNews')->name('front.load.more.news');

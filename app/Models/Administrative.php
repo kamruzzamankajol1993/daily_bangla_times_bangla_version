@@ -11,14 +11,23 @@ class Administrative extends Model
 
     protected $guarded = ['id'];
 
-    public function designation()
+    protected $casts = [
+        'designation_id' => 'array',
+        'category_id' => 'array',
+    ];
+
+   // 2. Helper to get Designation Models
+    public function getDesignationsAttribute()
     {
-        return $this->belongsTo(Designation::class, 'designation_id');
+        if (empty($this->designation_id)) return collect([]);
+        return Designation::whereIn('id', $this->designation_id)->get();
     }
 
-    public function category()
+    // 3. Helper to get Category Models
+    public function getCategoriesAttribute()
     {
-        return $this->belongsTo(AdministrativeCategory::class, 'category_id');
+        if (empty($this->category_id)) return collect([]);
+        return AdministrativeCategory::whereIn('id', $this->category_id)->get();
     }
 
     public function socialLinks()

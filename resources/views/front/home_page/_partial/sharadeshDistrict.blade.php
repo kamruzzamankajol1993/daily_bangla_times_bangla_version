@@ -5,7 +5,12 @@
             {{-- ১. সারা দেশ নিউজ সেকশন (Left Side) --}}
             <div class="col-lg-5">
                 <div class="section-header-wrapper mb-3" style="border-bottom: 2px solid #dc3545;">
+                    @php
+            $saraSlug = (isset($saradeshNews) && count($saradeshNews) > 0) ? ($saradeshNews->first()->categories->first()->slug ?? '#') : '#';
+        @endphp
+        <a href="{{ $saraSlug != '#' ? route('front.category.news', $saraSlug) : '#' }}" class="text-white text-decoration-none">
                     <h5 class="bg-success text-white d-inline-block px-3 py-2 m-0 fw-bold">সারা দেশ</h5>
+        </a>
                 </div>
 
                 @if(isset($saradeshNews) && count($saradeshNews) > 0)
