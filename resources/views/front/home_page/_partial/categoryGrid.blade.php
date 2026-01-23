@@ -1,3 +1,6 @@
+
+
+
 <section class="category-grid py-4 bg-light">
     <div class="container">
         <div class="row g-4">

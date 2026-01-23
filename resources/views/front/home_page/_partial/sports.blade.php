@@ -47,14 +47,13 @@
                         @endif
 
                         {{-- Col 1: Sub Items (Index 1, 2) --}}
+                        {{-- আপডেট: ইমেজ ডান পাশে নেওয়া হয়েছে --}}
                         <div class="d-flex flex-column gap-3">
                             @foreach($sportsNews->slice(1, 2) as $news)
                                 <div class="card border-0 shadow-sm p-2">
-                                    <div class="d-flex align-items-center">
-                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x60/222/fff?text=Sports' }}" 
-                                             class="me-3 rounded-1 flex-shrink-0" 
-                                             width="100" height="60" style="object-fit: cover;">
-                                        <div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        {{-- টেক্সট বামে --}}
+                                        <div class="me-2">
                                             @if($news->subtitle)
                                                 <div class="news-subtitle" style="font-size: 11px;">{{ $news->subtitle }}</div>
                                             @endif
@@ -65,6 +64,10 @@
                                                 <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                             </h6>
                                         </div>
+                                        {{-- ইমেজ ডানে --}}
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x60/222/fff?text=Sports' }}" 
+                                             class="rounded-1 flex-shrink-0" 
+                                             width="100" height="60" style="object-fit: cover;">
                                     </div>
                                 </div>
                             @endforeach
@@ -105,14 +108,13 @@
                         @endif
 
                         {{-- Col 2: Sub Items (Index 4, 5) --}}
+                        {{-- আপডেট: ইমেজ ডান পাশে নেওয়া হয়েছে --}}
                         <div class="d-flex flex-column gap-3">
                             @foreach($sportsNews->slice(4, 2) as $news)
                                 <div class="card border-0 shadow-sm p-2">
-                                    <div class="d-flex align-items-center">
-                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x60/555/fff?text=Sports' }}" 
-                                             class="me-3 rounded-1 flex-shrink-0" 
-                                             width="100" height="60" style="object-fit: cover;">
-                                        <div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        {{-- টেক্সট বামে --}}
+                                        <div class="me-2">
                                             @if($news->subtitle)
                                                 <div class="news-subtitle" style="font-size: 11px;">{{ $news->subtitle }}</div>
                                             @endif
@@ -123,6 +125,10 @@
                                                 <small class="bangla-date"><i class="far fa-clock me-1"></i>{{ bangla_date($news->created_at) }}</small>
                                             </h6>
                                         </div>
+                                        {{-- ইমেজ ডানে --}}
+                                        <img  onerror="this.onerror=null;this.src='{{ $front_admin_url }}{{ $front_logo_name }}';" src="{{ $news->image ? $front_admin_url.$news->image : 'https://placehold.co/100x60/555/fff?text=Sports' }}" 
+                                             class="rounded-1 flex-shrink-0" 
+                                             width="100" height="60" style="object-fit: cover;">
                                     </div>
                                 </div>
                             @endforeach
