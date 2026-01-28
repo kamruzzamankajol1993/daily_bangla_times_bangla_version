@@ -7,10 +7,10 @@
                 {{-- মেনু আইটেম --}}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-wrap">
                     
-                    {{-- ১. হোম / সর্বশেষ --}}
+                    {{-- ১. হোম /<i class="fa-solid fa-house"></i> --}}
                     <li class="nav-item">
                         <a class="nav-link ps-0" href="{{ route('front.index') }}">
-                           সর্বশেষ
+                          <i class="fa-solid fa-house"></i>
                         </a>
                     </li>
 

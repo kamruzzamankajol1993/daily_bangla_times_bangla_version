@@ -77,7 +77,7 @@
 
     {{-- বাটন (গ্রিন কালার) --}}
     <div class="d-flex gap-2">
-        <a href="#" class="header-btn">Fact Check</a>
+        <a href="{{ $front_fact_check_url }}" class="header-btn">Fact Check</a>
         <a href="{{$front_english_url ?? '#'}}" class="header-btn">English</a>
     </div>
 

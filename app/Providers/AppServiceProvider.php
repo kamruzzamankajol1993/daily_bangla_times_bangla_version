@@ -140,6 +140,7 @@ view()->composer('front.include.headline', function ($view) {
                 $front_admin_url= $frontEndData->main_url;
                 $front_front_url= $frontEndData->front_url;
                 $front_english_url= $frontEndData->english_url;
+                $front_fact_check_url= $frontEndData->fact_check_url;
                 $front_personal_logo = $frontEndData->personal_logo;
                 $front_english_banner = $frontEndData->english_banner;
                 $front_bangla_banner = $frontEndData->bangla_banner;
@@ -174,6 +175,7 @@ view()->composer('front.include.headline', function ($view) {
                 $front_admin_url= '';
                 $front_front_url= '';
                 $front_english_url= '';
+                $front_fact_check_url= '';
                 $front_personal_logo = '';
                 $front_english_banner = ''; 
                 $front_bangla_banner = '';
@@ -209,6 +211,7 @@ view()->composer('front.include.headline', function ($view) {
             view()->share('front_admin_url', $front_admin_url);
             view()->share('front_front_url', $front_front_url);
             view()->share('front_english_url', $front_english_url);
+            view()->share('front_fact_check_url', $front_fact_check_url);
             view()->share('front_personal_logo', $front_personal_logo);             
             view()->share('front_english_banner', $front_english_banner);
             view()->share('front_bangla_banner', $front_bangla_banner);

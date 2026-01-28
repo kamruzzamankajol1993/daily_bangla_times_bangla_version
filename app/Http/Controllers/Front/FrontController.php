@@ -58,7 +58,7 @@ class FrontController extends Controller
                 $query->where('category_id', $categoryId);
             }
 
-            $posts = $query->orderBy('id', 'desc')->take($limit)->get();
+            $posts = $query->orderBy('created_at', 'desc')->take($limit)->get();
 
             if ($categoryId && $posts->count() == 0) {
                 return Post::with(['categories:id,name,slug'])
@@ -70,7 +70,7 @@ class FrontController extends Controller
                     ->whereHas('categories', function ($q) use ($categoryId) {
                         $q->where('categories.id', $categoryId);
                     })
-                    ->orderBy('id', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->take($limit)
                     ->get();
             }
@@ -90,7 +90,7 @@ class FrontController extends Controller
         $latestPosts = Cache::remember('bn_home_latest', 300, function () use ($selectCols) {
             return Post::with('categories:id,name,slug')->selectRaw($selectCols)
                 ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
-                ->orderBy('id', 'desc')->take(10)->get();
+                ->orderBy('created_at', 'desc')->take(10)->get();
         });
 
         // ২. জনপ্রিয় খবর (bn_home_popular)
@@ -105,7 +105,7 @@ class FrontController extends Controller
             return Post::selectRaw($selectCols)
                 ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
                 ->where('home_page_position', 'under_madam_image')
-                ->orderBy('id', 'desc')->take(8)->get();
+                ->orderBy('created_at', 'desc')->take(8)->get();
         });
 
         // ৪. স্লাইডার (bn_home_slider)
@@ -113,7 +113,7 @@ class FrontController extends Controller
             return Post::selectRaw($selectCols)
                 ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
                 ->where('home_page_position', 'slider')
-                ->orderBy('id', 'desc')->take(5)->get();
+                ->orderBy('created_at', 'desc')->take(5)->get();
         });
         
         // ৫. র‍্যান্ডম নিউজ (bn_home_random)
@@ -144,7 +144,7 @@ class FrontController extends Controller
                 $englishNews = Cache::remember('bn_home_english', 600, function () {
                     return Post::selectRaw('id, title, slug, image, subtitle, created_at, category_id, LEFT(content, 2000) as content')
                         ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'en')
-                        ->orderBy('id', 'desc')->take(4)->get();
+                        ->orderBy('created_at', 'desc')->take(4)->get();
                 });
 
                 // ২. আন্তর্জাতিক (bn_home_international)
@@ -259,7 +259,7 @@ class FrontController extends Controller
                 $videoGalleryNews = Cache::remember('bn_home_videos', 600, function () {
                     return VideoNews::select('id', 'title', 'slug', 'thumbnail','created_at')
                         ->where('status', 'approved')->where('draft_status', 0)->where('trash_status', 0)->where('language', 'bn')
-                        ->orderBy('id', 'desc')->take(9)->get();
+                        ->orderBy('created_at', 'desc')->take(9)->get();
                 });
 
                 $html .= view('front.home_page._partial.videoGallery', compact('videoGalleryNews'))->render();
@@ -475,6 +475,8 @@ set_time_limit(0);
     // 1. Find the Category by slug
     $category = Category::where('slug', $slug)->firstOrFail();
 
+    //dd($category->id);
+
     // 2. Fetch Posts for this Category with Pagination
     // We use whereHas because we are querying from the Post model perspective to ensure global scopes (trash/draft) apply correctly.
     $posts = Post::whereHas('categories', function($q) use ($category) {
@@ -484,8 +486,9 @@ set_time_limit(0);
                 ->where('draft_status', 0)
                 ->where('trash_status', 0)
                        ->where('language', 'bn')
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(12); // Grid layout, usually multiples of 3 or 4 are best
+              //  dd($posts);
 
     // 3. Check if it's an AJAX request (Pagination Click)
     if ($request->ajax()) {
@@ -535,7 +538,7 @@ public function newsDetailsOld($id)
                         ->where('draft_status', 0)
                                ->where('language', 'bn')
                         ->where('trash_status', 0)
-                        ->orderBy('id', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->first();
 
     $nextPost = Post::where('id', '>', $post->id)
@@ -590,7 +593,7 @@ public function newsDetails($slug)
                         ->where('draft_status', 0)
                                ->where('language', 'bn')
                         ->where('trash_status', 0)
-                        ->orderBy('id', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->first();
 
     $nextPost = Post::where('id', '>', $post->id)
@@ -682,7 +685,7 @@ public function videoDetail($slug)
 ->where('language', 'bn')
                         ->where('draft_status', 0)
                         ->where('trash_status', 0)
-                        ->orderBy('id', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->take(5)
                         ->get();
 
@@ -697,7 +700,7 @@ public function videoList(Request $request)
                 ->where('draft_status', 0)
                           ->where('language', 'bn') 
                 ->where('trash_status', 0)
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(12); // প্রতি পেজে ১২টি ভিডিও
 
     // ২. AJAX রিকোয়েস্ট চেক (প্যাজিনেশনের জন্য)
@@ -911,7 +914,7 @@ public function archive(Request $request)
         $query->where('category_id', $searchCategory);
     }
 
-    $posts = $query->orderBy('id', 'desc')->paginate(12)->withQueryString();
+    $posts = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
 
     // ৪. ক্যাটাগরি লিস্ট (ড্রপডাউনের জন্য)
     $categories = Category::where('status', 1)->select('id', 'name')->get();
